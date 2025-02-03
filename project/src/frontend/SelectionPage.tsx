@@ -82,7 +82,6 @@ function SelectionPage() {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          opacity: ; /* Reduce opacity */
           z-index: -1;
         }
 
@@ -98,7 +97,7 @@ function SelectionPage() {
           position: absolute;
           left: 50%;
           max-width: 400px;
-          background: rgba(255, 255, 255, 0.8); /* Semi-transparent */
+          background: rgba(255, 255, 255, 0.8); 
           padding: 30px;
           border-radius: 10px;
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -128,7 +127,7 @@ function SelectionPage() {
           text-decoration: underline;
         }
 
-        /* Radio Button Group */
+    
         .radio-group {
           display: flex;
           flex-direction: column;
@@ -189,7 +188,7 @@ function SelectionPage() {
           background-color: #4b00b3;
         }
 
-        /* Avatar Styling */
+    
         .avatar {
           position: absolute;
           right: 70%;

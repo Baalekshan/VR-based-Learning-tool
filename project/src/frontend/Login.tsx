@@ -24,7 +24,7 @@ function Login() {
 
   return (
     <div className="signup-container">
-      {/* Background Image */}
+     
       <img
         src={bgImage}
         alt="Background"
@@ -127,7 +127,7 @@ function Login() {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 500; /* Reduce opacity of background image */
+  opacity: 500; 
   z-index: -1;
 }
 
@@ -135,7 +135,7 @@ function Login() {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0); /* Dark overlay */
+  background: rgba(0, 0, 0, 0); 
   z-index: -1;
 }
 
@@ -143,17 +143,18 @@ function Login() {
   position: absolute;
   left: 10%;
   max-width: 400px;
-  background: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+  background: rgba(255, 255, 255, 0.7); 
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   z-index: 2;
 }
-  h2{
+ h2{
   font-size: 26px;
   font-weight: 500;
   margin-bottom: 5px;
   }
+
   p{
   font-size: 16px;
   margin-bottom: 20px;
