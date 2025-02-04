@@ -3,6 +3,8 @@ import { Navigate, useNavigate } from "react-router-dom";
 import bgImage from "../assets/loginBg.jpg";
 import avatarImage from "../assets/vr-avatar.png";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -19,13 +21,37 @@ function SignUp() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitting form data:', formData);
+    console.log("Submitting form data:", formData);
     try {
-      const response = await axios.post('http://localhost:5000/api/signup', formData);
-      console.log('Signup response:', response.data);
-      Navigate('/SelectionPage'); // Navigate to SelectionPage upon successful signup
-    } catch (error) {
-      console.error('Error signing up:', error);
+      const response = await axios.post(
+        "http://localhost:5000/api/signup",
+        formData
+      );
+
+      if (response.status === 201) {
+        toast.success("Account created successfully!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        setTimeout(() => {
+          Navigate("/SelectionPage");
+        }, 2000);
+
+      }
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 409) {
+          toast.error("Account already exists. Please log in.");
+        } else {
+          toast.error("Signup failed. Please try again.");
+        }
+      } else {
+        toast.error("Network error. Please check your connection.");
+      }
     }
   };
   
@@ -35,6 +61,8 @@ function SignUp() {
 
   return (
     <div className="signup-container">
+      {/* Toast Notification */}
+      <ToastContainer />
       {/* Background Image */}
       <img
         src={bgImage}
