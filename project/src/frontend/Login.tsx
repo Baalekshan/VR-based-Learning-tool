@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import bgImage from "../assets/loginBg.jpg";
 import avatarImage from "../assets/vr-avatar.png";
+import axios from "axios";
 
 function Login() {
   const [formData, setFormData] = useState({
-    userName: "",
+    email: "",
     password: "",
   });
   const Navigate = useNavigate();
@@ -17,11 +18,27 @@ function Login() {
   }
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('Login response:', response.data);
+  
+      if (response.status === 200) {
+        handleSelectionPage();
+      } else {
+        console.error('Login failed:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+    }
   };
-
+  
   return (
     <div className="signup-container">
      
@@ -49,9 +66,9 @@ function Login() {
               type="text"
               placeholder="Username"
               className="input-field full-width"
-              value={formData.userName}
+              value={formData.email}
               onChange={(e) =>
-                setFormData({ ...formData, userName: e.target.value })
+                setFormData({ ...formData, email: e.target.value })
               }
             />
             <input
@@ -75,7 +92,7 @@ function Login() {
             </label>
           </div>
 
-          <button type="submit" className="submit-btn" onClick={handleSelectionPage}>
+          <button type="submit" className="submit-btn">
             Sign in
           </button>
 

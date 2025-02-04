@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import bgImage from "../assets/loginBg.jpg";
 import avatarImage from "../assets/vr-avatar.png";
+import axios from "axios";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -16,10 +17,21 @@ function SignUp() {
     Navigate("/login");
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    console.log('Submitting form data:', formData);
+    try {
+      const response = await axios.post('http://localhost:5000/api/signup', formData);
+      console.log('Signup response:', response.data);
+      Navigate('/SelectionPage'); // Navigate to SelectionPage upon successful signup
+    } catch (error) {
+      console.error('Error signing up:', error);
+    }
   };
+  
+  const handleGoogleAuth = () => {
+    window.location.href = "http://localhost:5000/api/auth/google";
+  }
 
   return (
     <div className="signup-container">
@@ -104,12 +116,13 @@ function SignUp() {
 
           <p className="or-text">or register with</p>
 
-          <div className="social-buttons">
+          <div onSubmit={handleGoogleAuth} className="social-buttons">
             <button type="button" className="social-btn">
               <img
                 src="https://www.google.com/favicon.ico"
                 alt="Google"
                 className="icon"
+                onClick={handleGoogleAuth}
               />
               Google
             </button>
