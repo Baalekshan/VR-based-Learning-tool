@@ -13,6 +13,12 @@ import sensoryImg from "../assets/sensory.png";
 
 const ID: React.FC = () => {
   const navigate = useNavigate();
+  const handleProgressTrackingID = () => {
+    navigate("/progress-track-id");
+  }
+  const handleProfile = () => {
+    navigate("/user-profile");
+  }
 
   return (
     <div className="home-container">
@@ -21,8 +27,8 @@ const ID: React.FC = () => {
 
       {/* User Avatar Section */}
       <div className="user-avatar">
-        <img src={avatarIcon} alt="User Avatar" className="avatar" />
-        <span>Hey! your name</span>
+        <img src={avatarIcon} alt="User Avatar" className="avatar" onClick={handleProfile} />
+        <span className="tagline">Hey! your name</span>
       </div>
 
       {/* Main Title */}
@@ -40,7 +46,7 @@ const ID: React.FC = () => {
         </div>
         <div className="feature-card">
           <img src={progressIcon} alt="Progress Tracking" />
-          <span>Progress Tracking</span>
+          <span onClick={handleProgressTrackingID}>Progress Tracking</span>
         </div>
       </div>
 
@@ -178,6 +184,10 @@ const ID: React.FC = () => {
           width: 30px;
           height: 30px;
         }
+          .tagline{
+          color: #fff;
+          
+          }
 
         .content-wrapper {
           display: flex;

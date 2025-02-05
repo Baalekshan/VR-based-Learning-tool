@@ -5,6 +5,9 @@ import Login from './frontend/Login'
 import SelectionPage from './frontend/SelectionPage';
 import Asd from './frontend/Asd';
 import ID from './frontend/ID';
+import ProgressTrackingAsd from './frontend/ProgressTrackingAsd';
+import ProgressTrackingID from './frontend/ProgressTrackingID';
+import ProfilePage from './frontend/Profile';
 
 function App() {
   return(
@@ -15,6 +18,9 @@ function App() {
       <Route path="selectionpage" element={<SelectionPage />} />
       <Route path="asdpage" element={<Asd />} />
       <Route path="idpage" element={<ID />} />
+      <Route path="progress-track-asd" element={<ProgressTrackingAsd />} />
+      <Route path="progress-track-id" element={<ProgressTrackingID />} />
+      <Route path="user-profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   )
