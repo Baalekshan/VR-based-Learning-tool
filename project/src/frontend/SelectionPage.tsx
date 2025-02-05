@@ -10,6 +10,9 @@ function SelectionPage() {
   const handleLogin = () => {
     navigate("/login");
   };
+  const handleAsd = () => {
+    navigate("/asdpage");
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +60,7 @@ function SelectionPage() {
             </label>
           </div>
 
-          <button type="submit" className="submit-btn">
+          <button type="submit" className="submit-btn" onClick={handleAsd}>
             Submit
           </button>
         </form>

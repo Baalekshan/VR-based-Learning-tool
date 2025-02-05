@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import SignUp from './frontend/SignUp'
 import Login from './frontend/Login'
 import SelectionPage from './frontend/SelectionPage';
+import Asd from './frontend/Asd';
+import ID from './frontend/ID';
 
 function App() {
   return(
@@ -11,6 +13,8 @@ function App() {
       <Route path="/" element={<SignUp />} />
       <Route path="login" element={<Login />} />
       <Route path="selectionpage" element={<SelectionPage />} />
+      <Route path="asdpage" element={<Asd />} />
+      <Route path="idpage" element={<ID />} />
       </Routes>
     </Router>
   )
