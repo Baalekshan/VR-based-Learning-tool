@@ -2,6 +2,7 @@
   "name": "vite-react-typescript-starter",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -9,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mui/material": "^6.4.3",
     "@types/dotenv": "^6.1.1",
     "@types/express-session": "^1.18.1",
     "@types/passport": "^1.0.17",
@@ -17,7 +19,11 @@
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
+<<<<<<< Updated upstream
     "cors": "^2.8.5",
+=======
+    "bootstrap": "^5.3.3",
+>>>>>>> Stashed changes
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
@@ -26,6 +32,7 @@
     "passport-apple": "^2.0.2",
     "passport-google-oauth20": "^2.0.0",
     "react": "^19.0.0",
+    "react-bootstrap": "^2.10.9",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.5",
     "react-toastify": "^11.0.3"
