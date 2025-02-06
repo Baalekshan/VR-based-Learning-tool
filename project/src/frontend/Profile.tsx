@@ -4,6 +4,7 @@ import bgImage from "../assets/profileBg.jpg";
 import defaultAvatar from "../assets/boyProfile.jpg";
 import avatar1 from "../assets/boyProfile.jpg";
 import avatar2 from "../assets/girlProfile.jpg";
+import axios from "axios";
 
 
 const ProfilePage: React.FC = () => {
@@ -18,7 +19,6 @@ const ProfilePage: React.FC = () => {
     avatar: defaultAvatar, // Default avatar
   });
 
- 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
@@ -32,11 +32,38 @@ const ProfilePage: React.FC = () => {
     setFormData({ ...formData, avatar });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Profile Submitted:", formData);
+  
+    // Get the token from localStorage or cookies
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      console.error("Token not found");
+      return;
+    }
+  
+    console.log("Token: ", token);
+  
+    try {
+      const response = await axios.post<{ message: string }>(
+        "http://localhost:5000/api/profile",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Ensure the token is in the header
+          },
+          withCredentials: true, // Ensure cookies are sent if needed
+        }
+      );
+  
+      console.log("Profile Submitted:", response.data.message);
+    } catch (error) {
+      console.error("Error submitting profile:", error);
+    }
   };
-
+  
+  
   return (
     <div className="profile-container">
       {/* Background Image */}

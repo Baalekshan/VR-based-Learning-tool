@@ -16,17 +16,17 @@
         "correctAnswer": "🍎"
       },
       {
-        "question": "Which object is this?",
+        "question": "Choose the four wheeler ?",
         "options": ["🚗", "🚂", "🚲", "🛵"],
         "correctAnswer": "🚗"
       },
       {
         "question": "Which animal is jumping?",
-        "options": ["🐸", "🦘", "🦉", "🦆"],
+        "options": ["🐈", "🦘", "🦉", "🦆"],
         "correctAnswer": "🦘"
       },
       {
-        "question": "Which object is this?",
+        "question": "Select the baloon ?",
         "options": ["🎈", "🎂", "🪁", "🎶"],
         "correctAnswer": "🎈"
       },
@@ -41,9 +41,9 @@
         "correctAnswer": "🐶"
       },
       {
-        "question": "Which object is this?",
+        "question": "Pick the pen ?",
         "options": ["🖍️", "✂️", "🖊️", "📚"],
-        "correctAnswer": "🖍️"
+        "correctAnswer": "🖊️"
       },
       {
         "question": "Which is the suit?",

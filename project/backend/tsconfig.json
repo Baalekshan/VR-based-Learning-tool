@@ -1,4 +1,3 @@
-// filepath: /C:/Users/baale/VR-based-Learning-tool/project/backend/tsconfig.json
 {
     "compilerOptions": {
       "target": "ES6",
@@ -8,6 +7,6 @@
       "strict": true,
       "esModuleInterop": true
     },
-    "include": ["./**/*.ts"],
+    "include": ["./**/*.ts", "session.d.ts"],
     "exclude": ["node_modules"]
   }

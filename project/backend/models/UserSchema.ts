@@ -1,13 +1,15 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model, Types } from 'mongoose';
 
-interface UserDocument extends Document {
-    _id: mongoose.Types.ObjectId;
+export interface UserDocument extends Document {
+    _id: Types.ObjectId;
     firstName: string;
     lastName: string;
     email: string;
     password?: string;
     authMethod: 'local' | 'google';
 }
+
+export interface UserModel extends Model<UserDocument> {}
 
 const userSchema = new Schema<UserDocument>({
     firstName: { type: String, required: true },
@@ -17,6 +19,5 @@ const userSchema = new Schema<UserDocument>({
     authMethod: { type: String, enum: ['local', 'google'], default: 'local' },
 });
 
-const User = mongoose.model<UserDocument>('User', userSchema);
-
+const User: UserModel = mongoose.model<UserDocument, UserModel>('User', userSchema);
 export default User;
