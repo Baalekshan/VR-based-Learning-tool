@@ -8,6 +8,8 @@ import ID from './frontend/ID';
 import ProgressTrackingAsd from './frontend/ProgressTrackingAsd';
 import ProgressTrackingID from './frontend/ProgressTrackingID';
 import ProfilePage from './frontend/Profile';
+import CommunicationQuiz from './frontend/CommunicationQuiz';
+import ObjectQuiz from './frontend/ObjectQuiz';
 
 function App() {
   return(
@@ -21,6 +23,8 @@ function App() {
       <Route path="progress-track-asd" element={<ProgressTrackingAsd />} />
       <Route path="progress-track-id" element={<ProgressTrackingID />} />
       <Route path="user-profile" element={<ProfilePage />} />
+      <Route path="communication-quiz" element={<CommunicationQuiz />} />
+      <Route path="object-quiz" element={<ObjectQuiz />} />
       </Routes>
     </Router>
   )
