@@ -38,7 +38,7 @@ function SignUp() {
           draggable: true,
         });
         setTimeout(() => {
-          Navigate("/SelectionPage");
+          Navigate("/login");
         }, 2000);
 
       }

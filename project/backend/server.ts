@@ -7,6 +7,9 @@ import passport from 'passport';
 import loginRoute from './Login';
 import signupRoute from './SignUp';
 import passportRoute from './Passport';
+import meRoute from './auth'
+import profileRoute from './Profile'
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
 
@@ -26,7 +29,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(cookieParser());
 app.use(bodyParser.json());
 
 mongoose.connect('mongodb://localhost:27017/vr-learning-tool')
@@ -36,6 +39,8 @@ mongoose.connect('mongodb://localhost:27017/vr-learning-tool')
 app.use('/api', signupRoute);
 app.use('/api', loginRoute);
 app.use('/api', passportRoute);
+app.use('/api', meRoute)
+app.use('/api', profileRoute)
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);

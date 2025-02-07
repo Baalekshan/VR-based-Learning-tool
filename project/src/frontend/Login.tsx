@@ -1,41 +1,55 @@
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import bgImage from "../assets/loginBg.jpg";
 import avatarImage from "../assets/vr-avatar.png";
 import axios from "axios";
+
+interface LoginResponse {
+  message: string;
+  token: string;
+  user: { email: string; userId: string };
+}
 
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const Navigate = useNavigate();
-  const handleSignup = () => {
-    Navigate("/");
-  }
-  const handleSelectionPage = () => {
-    Navigate("/selectionpage");
-  }
 
+  const navigate = useNavigate();
+
+  const handleSignup = () => {
+    navigate("/");
+  };
+
+  const handleSelectionPage = () => {
+    navigate("/selectionpage");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+
     try {
-      const response = await axios.post('http://localhost:5000/api/login', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      console.log('Login response:', response.data);
-  
-      if (response.status === 200) {
+      const response = await axios.post(
+        "http://localhost:5000/api/login",
+        formData,
+        { withCredentials: true }
+      );
+
+      const data = response.data as LoginResponse;
+
+      console.log("Login response:", data);
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        console.log("Login successful!");
         handleSelectionPage();
       } else {
-        console.error('Login failed:', response.data.message);
+        console.error("Login failed:", data.message || "Unknown error");
       }
     } catch (error) {
-      console.error('Error logging in:', error);
+      console.error("Error logging in:", error);
     }
   };
   
