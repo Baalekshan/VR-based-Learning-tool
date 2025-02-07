@@ -110,7 +110,7 @@ const ProgressTrackingAsd: React.FC = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 100px; /* More space for chart */
+          gap: 100px; 
           margin-top: 40px;
           width: 90%;
         }
