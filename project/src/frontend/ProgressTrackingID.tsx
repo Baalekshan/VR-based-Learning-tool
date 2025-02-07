@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import bgImage from "../assets/backgroundID.jpg";
 import avatarIcon from "../assets/avatar.png";
 import userAvatar from "../assets/avatar.png";
 import subBg from "../assets/subBg.png";
+import { fetchProfile } from "../utils/fetchProfile";
 
 const ProgressTrackingID: React.FC = () => {
   const navigate = useNavigate();
+  const [userName, setUserName] = useState("your name");
+  useEffect(() => {
+    const getProfile = async () => {
+    const profile = await fetchProfile();
+    if (profile?.name) {
+      setUserName(profile.name);
+    }
+    };
+    getProfile();
+  }, []);
 
   return (
     <div className="progress-container">
@@ -17,7 +28,7 @@ const ProgressTrackingID: React.FC = () => {
       {/* User Avatar Section */}
       <div className="user-avatar">
         <img src={avatarIcon} alt="User Avatar" className="avatar" />
-        <span>Hey! your name</span>
+        <span>Hey! {userName}</span>
       </div>
 
       {/* Main Title */}

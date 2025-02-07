@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import "../styles/communicationQuizStyles.css";
+import { submitScore } from '../utils/submitScore';
+import useAuth from "../utils/useAuth";
 
 interface Question {
   question: string;
@@ -20,6 +22,7 @@ const CommunicationQuiz: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [selectedQuiz, setSelectedQuiz] = useState<string>("communicationQuiz");
+  const email = useAuth();
 
   useEffect(() => {
     fetch("quizData.json")
@@ -40,6 +43,9 @@ const CommunicationQuiz: React.FC = () => {
       setCurrentQuestion((prevQuestion) => prevQuestion + 1);
     } else {
       setQuizCompleted(true);
+      if (email) {
+        submitScore("communication-quiz", score, email);
+      }
     }
   };
 

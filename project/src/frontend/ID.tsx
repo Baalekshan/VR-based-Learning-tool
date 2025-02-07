@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {Navigate,  useNavigate } from "react-router-dom";
 import bgImage from "../assets/backgroundID.jpg";
 import vrCharacter from "../assets/vr-character.png";
@@ -9,9 +9,20 @@ import communicationImg from "../assets/communication.png";
 import cognitiveImg from "../assets/cognitive.png";
 import socialImg from "../assets/social.png";
 import sensoryImg from "../assets/sensory.png";
+import { fetchProfile } from "../utils/fetchProfile";
 
 
 const ID: React.FC = () => {
+  const [userName, setUserName] = useState("your name");
+  useEffect(() => {
+    const getProfile = async () => {
+    const profile = await fetchProfile();
+    if (profile?.name) {
+      setUserName(profile.name);
+    }
+  };
+    getProfile();
+  }, []);
   const navigate = useNavigate();
   const handleProgressTrackingID = () => {
     navigate("/progress-track-id");
@@ -28,7 +39,7 @@ const ID: React.FC = () => {
       {/* User Avatar Section */}
       <div className="user-avatar">
         <img src={avatarIcon} alt="User Avatar" className="avatar" onClick={handleProfile} />
-        <span className="tagline">Hey! your name</span>
+        <span>Hey! {userName}</span>
       </div>
 
       {/* Main Title */}
