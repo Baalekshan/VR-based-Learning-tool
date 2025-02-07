@@ -9,9 +9,22 @@ import communicationImg from "../assets/communication.png";
 import cognitiveImg from "../assets/cognitive.png";
 import socialImg from "../assets/social.png";
 import sensoryImg from "../assets/sensory.png";
+import { useEffect, useState } from "react";
+import { fetchProfile } from "../utils/fetchProfile";
 
 
 const Asd: React.FC = () => {
+  const [userName, setUserName] = useState("your name");
+  useEffect(() => {
+    const getProfile = async () => {
+      const profile = await fetchProfile();
+      if (profile?.name) {
+        setUserName(profile.name);
+      }
+    };
+    getProfile();
+  }, []);
+  
   const navigate = useNavigate();
   const handleProgressTrackingAsd = () => {
     navigate("/progress-track-asd");
@@ -28,7 +41,7 @@ const Asd: React.FC = () => {
       {/* User Avatar Section */}
       <div className="user-avatar">
         <img src={avatarIcon} alt="User Avatar" className="avatar" onClick={handleProfile} />
-        <span>Hey! your name</span>
+        <span>Hey! {userName}</span>
       </div>
 
       {/* Main Title */}

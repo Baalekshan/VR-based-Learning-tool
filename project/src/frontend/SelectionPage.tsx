@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import selectionBg from "../assets/selectionBg.jpg";
 import selectionAvatar from "../assets/selectionAvatar.png";
 
@@ -10,8 +10,8 @@ function SelectionPage() {
   const handleLogin = () => {
     navigate("/login");
   };
-  const handleAsd = () => {
-    navigate("/asdpage");
+  const handleProfile = () => {
+    navigate("/user-profile");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -60,7 +60,7 @@ function SelectionPage() {
             </label>
           </div>
 
-          <button type="submit" className="submit-btn" onClick={handleAsd}>
+          <button type="submit" className="submit-btn" onClick={handleProfile}>
             Submit
           </button>
         </form>
