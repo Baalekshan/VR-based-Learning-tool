@@ -5,7 +5,6 @@ import avatarIcon from "../assets/avatar.png";
 import userAvatar from "../assets/avatar.png";
 import subBg from "../assets/subBg.png";
 
-
 const ProgressTrackingAsd: React.FC = () => {
   const navigate = useNavigate();
 
@@ -26,17 +25,16 @@ const ProgressTrackingAsd: React.FC = () => {
 
       {/* Content Layout */}
       <div className="content-wrapper">
-        {/* Left Side - User Avatar */}
+        {/* Left Side - VR Avatar */}
         <div className="left-section">
           <img src={userAvatar} alt="User Avatar" className="user-avatar-large" />
-          
         </div>
-        <button className="home-button" onClick={() => navigate("/asdpage")}>
-            HOME
-          </button>
 
-        {/* Right Side - Progress Chart */}
         
+        <div className="right-section">
+          {/* Placeholder for chart */}
+         
+        </div>
       </div>
 
       {/* Styles */}
@@ -60,7 +58,8 @@ const ProgressTrackingAsd: React.FC = () => {
           object-fit: cover;
           z-index: -1;
         }
-          .subBackground-image {
+
+        .subBackground-image {
           position: absolute;
           width: 70%;
           height: 80%;
@@ -69,12 +68,23 @@ const ProgressTrackingAsd: React.FC = () => {
           opacity: 0.8;
           border-radius: 50px;
           border: 1px solid white;
-          }
+        }
+
+        /* Close Button */
+        .close-button {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          cursor: pointer;
+          font-size: 28px;
+          color: black;
+          widht: 10px;
+        }
 
         .user-avatar {
           position: absolute;
           top: 20px;
-          left: 20px;
+          left: 60px;
           display: flex;
           align-items: center;
           font-size: 18px;
@@ -100,14 +110,15 @@ const ProgressTrackingAsd: React.FC = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 50px;
+          gap: 100px; /* More space for chart */
           margin-top: 40px;
+          width: 90%;
         }
 
         .left-section {
           display: flex;
-          flex-direction: row;
-          align-items: center;
+          justify-content: flex-start;
+          width: 50%;
         }
 
         .user-avatar-large {
@@ -115,43 +126,30 @@ const ProgressTrackingAsd: React.FC = () => {
           height: 300px;
           border-radius: 50%;
           border: 4px solid white;
-          margin-right: 550px;
-          
-        }
-
-        .home-button {
-          background-color: #6200ea;
-          color: white;
-          font-size: 16px;
-          font-weight: bold;
-          border: none;
-          border-radius: 8px;
-          padding: 12px 20px;
-          margin-top: 15px;
-          margin-left: -20px;
-          cursor: pointer;
-          transition: background 0.3s ease;
-        }
-
-        .home-button:hover {
-          background-color: #4b00b3;
         }
 
         .right-section {
           display: flex;
           align-items: center;
+          justify-content: center;
+          width: 50%;
         }
 
-        
-
+        /* Responsive Design */
         @media (max-width: 768px) {
           .content-wrapper {
             flex-direction: column;
             gap: 20px;
           }
 
-          .progress-chart {
-            width: 280px;
+          .left-section, .right-section {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .user-avatar-large {
+            width: 200px;
+            height: 200px;
           }
         }
       `}</style>
