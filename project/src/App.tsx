@@ -10,6 +10,7 @@ import ProgressTrackingID from "./frontend/ProgressTrackingID";
 import ProfilePage from "./frontend/Profile";
 import CommunicationQuiz from "./frontend/CommunicationQuiz";
 import ObjectQuiz from "./frontend/ObjectQuiz";
+import TrafficScene from "./frontend/RoadCross";
 
 const isAuthenticated = () => {
   return !!localStorage.getItem("token");
@@ -36,6 +37,7 @@ function App() {
         <Route path="/user-profile" element={<PrivateRoute element={<ProfilePage />} />} />
         <Route path="/communication-quiz" element={<PrivateRoute element={<CommunicationQuiz />} />} />
         <Route path="/object-quiz" element={<PrivateRoute element={<ObjectQuiz />} />} />
+        <Route path="/road-crossing" element={<PrivateRoute element={<TrafficScene />} />} />
       </Routes>
     </Router>
   );

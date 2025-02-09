@@ -14,11 +14,15 @@ import { fetchProfile } from "../utils/fetchProfile";
 
 const ID: React.FC = () => {
   const [userName, setUserName] = useState("your name");
+  const [avatar, setAvatar] = useState("");
   useEffect(() => {
     const getProfile = async () => {
     const profile = await fetchProfile();
     if (profile?.name) {
       setUserName(profile.name);
+    }
+    if (profile?.avatar) {
+      setAvatar(profile.avatar);
     }
   };
     getProfile();
@@ -38,7 +42,7 @@ const ID: React.FC = () => {
 
       {/* User Avatar Section */}
       <div className="user-avatar">
-        <img src={avatarIcon} alt="User Avatar" className="avatar" onClick={handleProfile} />
+        <img src={avatar} alt="User Avatar" style={{ borderRadius: "50%" }} className="avatar" onClick={handleProfile} />
         <span>Hey! {userName}</span>
       </div>
 
@@ -67,11 +71,11 @@ const ID: React.FC = () => {
         <div className="skill-cards left">
           <div className="skill-card">
             <img src={communicationImg} alt="Communication Skills" />
-            <span>COMMUNICATION SKILLS</span>
+            <span onClick={() => navigate("/communication-quiz")}>COMMUNICATION SKILLS</span>
           </div>
           <div className="skill-card">
             <img src={cognitiveImg} alt="Cognitive Skills" />
-            <span>COGNITIVE SKILLS</span>
+            <span onClick={() => navigate("/road-crossing")}>COGNITIVE SKILLS</span>
           </div>
         </div>
 
@@ -82,7 +86,7 @@ const ID: React.FC = () => {
         <div className="skill-cards right">
           <div className="skill-card">
             <img src={socialImg} alt="Daily Life & Social Interaction" />
-            <span>DAILY LIFE AND SOCIAL INTERACTION</span>
+            <span onClick={() => navigate("/object-quiz")}>DAILY LIFE AND SOCIAL INTERACTION</span>
           </div>
           <div className="skill-card">
             <img src={sensoryImg} alt="Sensory Regulation" />

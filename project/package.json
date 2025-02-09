@@ -11,6 +11,7 @@
   "dependencies": {
     "@mui/icons-material": "^6.4.3",
     "@mui/material": "^6.4.3",
+    "@types/aframe": "^1.2.7",
     "@types/cookie-parser": "^1.4.8",
     "@types/dotenv": "^6.1.1",
     "@types/express-session": "^1.18.1",
@@ -19,6 +20,8 @@
     "@types/passport": "^1.0.17",
     "@types/passport-apple": "^2.0.3",
     "@types/passport-google-oauth20": "^2.0.16",
+    "aframe": "^1.6.0",
+    "aframe-look-at-component": "^1.0.0",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",

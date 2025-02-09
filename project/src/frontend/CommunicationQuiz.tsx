@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import "../styles/communicationQuizStyles.css";
 import { submitScore } from '../utils/submitScore';
-import useAuth from "../utils/useAuth";
+import useAuth from "../utils/UseAuth";
 
 interface Question {
   question: string;
