@@ -26,6 +26,10 @@ function Login() {
     navigate("/selectionpage");
   };
 
+  const handleGoogleAuth = () => {
+    window.location.assign("http://localhost:5000/api/auth/google");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
@@ -118,6 +122,7 @@ function Login() {
                 src="https://www.google.com/favicon.ico"
                 alt="Google"
                 className="icon"
+                onClick={handleGoogleAuth}
               />
               Google
             </button>

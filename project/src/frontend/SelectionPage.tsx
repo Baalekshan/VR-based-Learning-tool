@@ -7,9 +7,6 @@ function SelectionPage() {
   const [selectedCategory, setSelectedCategory] = useState(""); // Store selected category
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    navigate("/login");
-  };
   const handleProfile = () => {
     navigate("/user-profile");
   };

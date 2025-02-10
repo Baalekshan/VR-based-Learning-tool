@@ -1,12 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import bgImage from "../assets/backgroundID.jpg";
 import avatarIcon from "../assets/avatar.png";
 import userAvatar from "../assets/avatar.png";
 import subBg from "../assets/subBg.png";
+import { fetchProfile } from "../utils/fetchProfile";
+import { fetchScore } from "../utils/fetchScore";
+
+const colorMapping: { [key: string]: string } = {
+  "communication-quiz": "bg-success",
+  "object-quiz": "bg-warning",
+  "road-crossing": "bg-danger",
+};
+
+const activityMap: Record<string, string> = {
+  "communication-quiz": "Communication Quiz",
+  "object-quiz": "Object Quiz",
+  "road-crossing": "Road Crossing"
+};
+
+const scoreMap: Record<string, number> = {
+  "communication-quiz": 5,
+  "object-quiz": 10,
+  "road-crossing": 10
+};
 
 const ProgressTrackingID: React.FC = () => {
   const navigate = useNavigate();
+  const [userName, setUserName] = useState("your name");
+  const [scores, setScores] = useState<{ [activity: string]: number }>({});
+  useEffect(() => {
+    const getProfile = async () => {
+    const profile = await fetchProfile();
+    if (profile?.name) {
+      setUserName(profile.name);
+    }
+    };
+    getProfile();
+  }, []);
+
+  useEffect(() => {
+      const fetchData = async () => {
+        const data = await fetchScore();
+        if (data && data.score) {
+          setScores(data.score);
+        }
+      };
+      fetchData();
+    }, []);
 
   return (
     <div className="progress-container">
@@ -17,7 +58,7 @@ const ProgressTrackingID: React.FC = () => {
       {/* User Avatar Section */}
       <div className="user-avatar">
         <img src={avatarIcon} alt="User Avatar" className="avatar" />
-        <span>Hey! your name</span>
+        <span>Hey! {userName}</span>
       </div>
 
       {/* Main Title */}
@@ -27,13 +68,36 @@ const ProgressTrackingID: React.FC = () => {
       <div className="content-wrapper">
         {/* Left Side - VR Avatar */}
         <div className="left-section">
-          <img src={userAvatar} alt="User Avatar" className="user-avatar-large" />
+        <img src={userAvatar} alt="User Avatar" className="user-avatar-large" />
         </div>
 
         
         <div className="right-section">
           {/* Placeholder for chart */}
-         
+          <div className="progress-chart">
+            {Object.entries(scores).map(([activity, score]) => (
+              <div key={activity} className="progress-item">
+                <label style={{ fontFamily: '"Londrina Solid", serif' }}>
+                  <h3>{activityMap[activity]}</h3>
+                </label>
+                <div className="progress" style={{ height: "20px", width: "200px", margin: "0 auto", borderRadius: "4px !important" }}>
+                  <div
+                    className={`progress-bar ${colorMapping[activity] || "bg-primary"}`}
+                    role="progressbar"
+                    style={{
+                      width: `${(5 / scoreMap[activity]) * 100}%`,
+                      borderRadius: "4px !important",
+                    }}
+                    aria-valuenow={score}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                  >
+                    {score}%
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div> 
         </div>
       </div>
 
@@ -49,6 +113,13 @@ const ProgressTrackingID: React.FC = () => {
           justify-content: center;
           overflow: hidden;
           text-align: center;
+        }
+        
+        .progress-chart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .background-image {
@@ -158,3 +229,7 @@ const ProgressTrackingID: React.FC = () => {
 };
 
 export default ProgressTrackingID;
+
+function setScores(score: { [activity: string]: number; }) {
+  throw new Error("Function not implemented.");
+}

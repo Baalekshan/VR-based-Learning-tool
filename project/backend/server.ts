@@ -10,6 +10,7 @@ import passportRoute from './Passport';
 import meRoute from './auth'
 import profileRoute from './Profile'
 import cookieParser from 'cookie-parser';
+import scoreRoutes from './scores'
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -41,6 +42,7 @@ app.use('/api', loginRoute);
 app.use('/api', passportRoute);
 app.use('/api', meRoute)
 app.use('/api', profileRoute)
+app.use("/api", scoreRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);

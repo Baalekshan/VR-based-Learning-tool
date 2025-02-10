@@ -56,8 +56,9 @@ function SignUp() {
   };
   
   const handleGoogleAuth = () => {
-    window.location.href = "http://localhost:5000/api/auth/google";
-  }
+    window.location.assign("http://localhost:5000/api/auth/google");
+  };
+  
 
   return (
     <div className="signup-container">
@@ -144,7 +145,7 @@ function SignUp() {
 
           <p className="or-text">or register with</p>
 
-          <div onSubmit={handleGoogleAuth} className="social-buttons">
+          <div className="social-buttons">
             <button type="button" className="social-btn">
               <img
                 src="https://www.google.com/favicon.ico"

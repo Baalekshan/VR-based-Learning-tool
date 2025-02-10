@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import selectionBg from "../assets/selectionBg.jpg";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import '../styles/ObjectQuizStyles.css';
-
+import { submitScore } from '../utils/submitScore';
+import useAuth from '../utils/UseAuth';
 type Question = {
   question: string;
   options: string[];
@@ -16,6 +16,7 @@ const ObjectQuiz: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
+  const email = useAuth();
 
   useEffect(() => {
     fetch('quizData.json')
@@ -45,6 +46,10 @@ const ObjectQuiz: React.FC = () => {
     setQuizCompleted(false);
     setScore(0);
   };
+
+  if (quizCompleted && email) {
+    submitScore('object-quiz', score, email);
+  }
 
   const progressPercentage = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 

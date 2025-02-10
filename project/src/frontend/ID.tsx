@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {Navigate,  useNavigate } from "react-router-dom";
 import bgImage from "../assets/backgroundID.jpg";
 import vrCharacter from "../assets/vr-character.png";
@@ -9,9 +9,24 @@ import communicationImg from "../assets/communication.png";
 import cognitiveImg from "../assets/cognitive.png";
 import socialImg from "../assets/social.png";
 import sensoryImg from "../assets/sensory.png";
+import { fetchProfile } from "../utils/fetchProfile";
 
 
 const ID: React.FC = () => {
+  const [userName, setUserName] = useState("your name");
+  const [avatar, setAvatar] = useState("");
+  useEffect(() => {
+    const getProfile = async () => {
+    const profile = await fetchProfile();
+    if (profile?.name) {
+      setUserName(profile.name);
+    }
+    if (profile?.avatar) {
+      setAvatar(profile.avatar);
+    }
+  };
+    getProfile();
+  }, []);
   const navigate = useNavigate();
   const handleProgressTrackingID = () => {
     navigate("/progress-track-id");
@@ -27,8 +42,8 @@ const ID: React.FC = () => {
 
       {/* User Avatar Section */}
       <div className="user-avatar">
-        <img src={avatarIcon} alt="User Avatar" className="avatar" onClick={handleProfile} />
-        <span className="tagline">Hey! your name</span>
+        <img src={avatar} alt="User Avatar" style={{ borderRadius: "50%" }} className="avatar" onClick={handleProfile} />
+        <span>Hey! {userName}</span>
       </div>
 
       {/* Main Title */}
@@ -56,11 +71,11 @@ const ID: React.FC = () => {
         <div className="skill-cards left">
           <div className="skill-card">
             <img src={communicationImg} alt="Communication Skills" />
-            <span>COMMUNICATION SKILLS</span>
+            <span onClick={() => navigate("/communication-quiz")}>COMMUNICATION SKILLS</span>
           </div>
           <div className="skill-card">
             <img src={cognitiveImg} alt="Cognitive Skills" />
-            <span>COGNITIVE SKILLS</span>
+            <span onClick={() => navigate("/road-crossing")}>COGNITIVE SKILLS</span>
           </div>
         </div>
 
@@ -71,7 +86,7 @@ const ID: React.FC = () => {
         <div className="skill-cards right">
           <div className="skill-card">
             <img src={socialImg} alt="Daily Life & Social Interaction" />
-            <span>DAILY LIFE AND SOCIAL INTERACTION</span>
+            <span onClick={() => navigate("/object-quiz")}>DAILY LIFE AND SOCIAL INTERACTION</span>
           </div>
           <div className="skill-card">
             <img src={sensoryImg} alt="Sensory Regulation" />

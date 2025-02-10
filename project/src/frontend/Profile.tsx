@@ -51,9 +51,9 @@ const ProfilePage: React.FC = () => {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Ensure the token is in the header
+            Authorization: `Bearer ${token}`,
           },
-          withCredentials: true, // Ensure cookies are sent if needed
+          withCredentials: true,
         }
       );
   

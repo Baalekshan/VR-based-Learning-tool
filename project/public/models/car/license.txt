@@ -1,0 +1,11 @@
+Model Information:
+* title:	Lada 2109 base template (FREE)
+* source:	https://sketchfab.com/3d-models/lada-2109-base-template-free-380347fe45c54785a89f106c8d5bbd2a
+* author:	Art_bor (https://sketchfab.com/Art_bor)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Lada 2109 base template (FREE)" (https://sketchfab.com/3d-models/lada-2109-base-template-free-380347fe45c54785a89f106c8d5bbd2a) by Art_bor (https://sketchfab.com/Art_bor) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
