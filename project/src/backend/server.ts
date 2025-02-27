@@ -16,6 +16,7 @@ import scoreRoutes from './scores';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const BASE_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
 
 // CORS settings for deployment
 app.use(cors({
@@ -59,5 +60,5 @@ app.get('*', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on ${BASE_URL}`);
 });
