@@ -3,6 +3,7 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import "../styles/CommunicationQuizStyles.css";
 import { submitScore } from '../utils/submitScore';
 import useAuth from "../utils/UseAuth";
+import selectionBg from "../assets/selectionBg.jpg";
 
 interface Question {
   question: string;
@@ -57,6 +58,7 @@ const CommunicationQuiz: React.FC = () => {
 
   return (
     <div className="quiz-container">
+      <img src={selectionBg} alt="Background" className="background-image" />
       <h2 className="quiz-title">Image Quiz</h2>
       <ProgressBar
         animated
