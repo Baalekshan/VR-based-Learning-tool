@@ -47,7 +47,7 @@ const ProfilePage: React.FC = () => {
   
     try {
       const response = await axios.post<{ message: string }>(
-        "http://localhost:5000/api/profile",
+        "https://vr-based-learning-tool.onrender.com/api/profile",
         formData,
         {
           headers: {

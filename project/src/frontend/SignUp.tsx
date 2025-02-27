@@ -24,7 +24,7 @@ function SignUp() {
     console.log("Submitting form data:", formData);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/signup",
+        "https://vr-based-learning-tool.onrender.com/api/signup",
         formData
       );
 
@@ -56,7 +56,7 @@ function SignUp() {
   };
   
   const handleGoogleAuth = () => {
-    window.location.assign("http://localhost:5000/api/auth/google");
+    window.location.assign("https://vr-based-learning-tool.onrender.com/api/auth/google");
   };
   
 

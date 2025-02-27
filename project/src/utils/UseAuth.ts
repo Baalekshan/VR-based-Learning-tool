@@ -12,7 +12,7 @@ const useAuth = (): string | null => {
     const token = localStorage.getItem("token");  // Get the token from localStorage
     if (token) {
       // Fetch current user with the token
-      axios.get<User>("http://localhost:5000/api/current-user", {
+      axios.get<User>("https://vr-based-learning-tool.onrender.com/api/current-user", {
         headers: {
           Authorization: `Bearer ${token}`,  // Send the token for authentication
         },

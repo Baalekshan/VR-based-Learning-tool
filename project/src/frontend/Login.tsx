@@ -27,7 +27,7 @@ function Login() {
   };
 
   const handleGoogleAuth = () => {
-    window.location.assign("http://localhost:5000/api/auth/google");
+    window.location.assign("https://vr-based-learning-tool.onrender.com/api/auth/google");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +36,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/login",
+        "https://vr-based-learning-tool.onrender.com/api/login",
         formData,
         { withCredentials: true }
       );
