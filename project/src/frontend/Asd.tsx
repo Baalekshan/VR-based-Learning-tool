@@ -50,7 +50,7 @@ const Asd: React.FC = () => {
 
       {/* Main Title */}
       <h1 className="title">
-        <span className="gradient-text">VR Learning Adventures</span>
+        <span className="radley-regular">VR Learning Adventures</span>
         <br />
         <span className="radley-regular">Empowering Kids with ASD</span>
       </h1>

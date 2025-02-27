@@ -56,6 +56,12 @@ const ProfilePage: React.FC = () => {
           withCredentials: true,
         }
       );
+      
+      if (formData.disorder === "ASD") {
+        navigate("/asdpage");
+      } else if (formData.disorder === "ID") {
+        navigate("/idpage");
+      }
   
       console.log("Profile Submitted:", response.data.message);
     } catch (error) {

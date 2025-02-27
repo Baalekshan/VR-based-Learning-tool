@@ -48,7 +48,7 @@ const ID: React.FC = () => {
 
       {/* Main Title */}
       <h1 className="title">
-        <span className="gradient-text">VR Learning Adventures</span>
+        <span className="radley-regular">VR Learning Adventures</span>
         <br />
         <span className="radley-regular">Learning Made Easy for Kids with ID!</span>
       </h1>
@@ -128,6 +128,7 @@ const ID: React.FC = () => {
           align-items: center;
           font-size: 18px;
           font-weight: bold;
+          font-color: #fff;
         }
 
         .avatar {
