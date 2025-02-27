@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import 'aframe';
+// @ts-expect-error
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAuth from '../utils/UseAuth';

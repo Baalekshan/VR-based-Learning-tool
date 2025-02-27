@@ -50,7 +50,7 @@ app.use('/api', profileRoute);
 app.use('/api', scoreRoutes);
 
 // Serve the frontend
-const frontendPath = path.join(__dirname, '../../frontend/dist');
+const frontendPath = path.join(__dirname, '../../../dist');
 app.use(express.static(frontendPath));
 
 app.get('*', (req, res) => {
