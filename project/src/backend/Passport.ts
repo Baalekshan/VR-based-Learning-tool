@@ -100,7 +100,7 @@ router.get(
     });
 
     console.log('Google authentication successful, redirecting...');
-    res.redirect('http://localhost:5173/selectionpage');
+    res.redirect('http://localhost:5000/selectionpage');
   }
 );
 
