@@ -3,14 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "install:backend": "npm install --prefix src/backend",
-    "install:frontend": "npm install --prefix src/frontend",
-    "install": "npm run install:backend && npm run install:frontend",
+    "install": "npm install",
     
-    "build:backend": "npm run build --prefix src/backend",
-    "build:frontend": "npm run build --prefix src/frontend",
-    "build": "npm run build:frontend && npm run build:backend",
-    
+    "build:backend": "echo 'Skipping backend build (handled in root build script)'",
+    "build:frontend": "npm run build",
+    "build": "npm run build:frontend",
+
     "start": "node src/backend/dist/server.js",
     "dev": "vite",
     "lint": "eslint .",
