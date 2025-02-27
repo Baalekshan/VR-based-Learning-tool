@@ -13,7 +13,7 @@ import { fetchProfile } from "../utils/fetchProfile";
 
 
 const ID: React.FC = () => {
-  const [userName, setUserName] = useState("your name");
+  const [userName, setUserName] = useState("");
   const [avatar, setAvatar] = useState("");
   useEffect(() => {
     const getProfile = async () => {
@@ -128,7 +128,7 @@ const ID: React.FC = () => {
           align-items: center;
           font-size: 18px;
           font-weight: bold;
-          font-color: #fff;
+          color: #fff;
         }
 
         .avatar {

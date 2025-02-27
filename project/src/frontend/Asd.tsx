@@ -14,7 +14,7 @@ import { fetchProfile } from "../utils/fetchProfile";
 
 
 const Asd: React.FC = () => {
-  const [userName, setUserName] = useState("your name");
+  const [userName, setUserName] = useState("");
   const [avatar, setAvatar] = useState("");
   useEffect(() => {
     const getProfile = async () => {
