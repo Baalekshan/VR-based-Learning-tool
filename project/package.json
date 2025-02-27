@@ -3,10 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
+    "install": "cd src/backend && npm install && cd ../frontend && npm install",
+    "build": "cd src/frontend && npm run build && cd ../backend && npm run build",
+    "start": "node src/backend/dist/server.js",
     "dev": "vite",
-    "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "dependencies": {
     "@mui/icons-material": "^6.4.3",

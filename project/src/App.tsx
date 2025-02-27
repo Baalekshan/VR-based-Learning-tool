@@ -10,6 +10,7 @@ import ProgressTrackingID from "./frontend/ProgressTrackingID";
 import ProfilePage from "./frontend/Profile";
 import CommunicationQuiz from "./frontend/CommunicationQuiz";
 import ObjectQuiz from "./frontend/ObjectQuiz";
+// @ts-ignore
 import TrafficScene from "./frontend/RoadCross";
 
 const isAuthenticated = () => {
