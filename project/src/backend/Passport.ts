@@ -9,6 +9,10 @@ dotenv.config();
 
 const router = Router();
 
+const BASE_URL = process.env.NODE_ENV === 'production'
+  ? 'https://vr-based-learning-tool.onrender.com'
+  : 'http://localhost:5000';
+
 interface GoogleLoginUser {
   id: string;
   token: string;
@@ -103,7 +107,7 @@ router.get(
     });
 
     console.log('Google authentication successful, redirecting...');
-    res.redirect('http://localhost:5000/selectionpage');
+   res.redirect(`${BASE_URL}/selectionpage`);
   }
 );
 
