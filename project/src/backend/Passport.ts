@@ -9,7 +9,7 @@ dotenv.config();
 
 const router = Router();
 
-const BASE_URL = process.env.NODE_ENV === 'production'
+const BASE_URL = process.env.NODE_ENV == 'production'
   ? 'https://vr-based-learning-tool.onrender.com'
   : 'http://localhost:5000';
 
