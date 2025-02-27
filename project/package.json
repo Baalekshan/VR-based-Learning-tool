@@ -3,12 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "install": "npm install",
-    
-    "build:backend": "echo 'Skipping backend build (handled in root build script)'",
-    "build:frontend": "npm run build",
-    "build": "npm run build:frontend",
-
+    "build:frontend": "vite build",
+    "build:backend": "tsc -p src/backend",
+    "build": "npm run build:frontend && npm run build:backend",
     "start": "node src/backend/dist/server.js",
     "dev": "vite",
     "lint": "eslint .",
