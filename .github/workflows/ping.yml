@@ -1,0 +1,16 @@
+name: Scheduled Ping
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Runs every 5 minutes
+
+jobs:
+  pinger_job:
+    name: Ping the specified URL
+    runs-on: ubuntu-latest
+    env:
+      URL: ${{ secrets.URL }}
+      METHOD: GET  # HTTP method to use; default is GET
+    steps:
+      - id: ping
+        uses: sisodiya2421/pinger@master
