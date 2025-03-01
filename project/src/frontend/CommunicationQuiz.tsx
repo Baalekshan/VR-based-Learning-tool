@@ -58,7 +58,7 @@ const CommunicationQuiz: React.FC = () => {
 
   return (
     <div className="quiz-container">
-      <img src={selectionBg} alt="Background" className="background-image" />
+      {/* <img src={selectionBg} alt="Background" className="background-image" /> */}
       <h2 className="quiz-title">Image Quiz</h2>
       <ProgressBar
         animated
