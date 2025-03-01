@@ -57,7 +57,7 @@ const ObjectQuiz: React.FC = () => {
   return (
     <div className="container text-center mt-4">
       {/* Background Image */}
-      <img src={selectionBg} alt="Background" className="background-image" />
+      {/* <img src={selectionBg} alt="Background" className="background-image" /> */}
       <h3 className="fw-bold text-white">Object and Color Identification Quiz</h3>
 
       {/* Progress Bar */}
