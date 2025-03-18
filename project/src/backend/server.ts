@@ -20,6 +20,16 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const BASE_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
 
+// MongoDB Connection (Use MongoDB Atlas for production)
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/vr-learning-tool';
+
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1); // Exit if MongoDB connection fails
+  });
+
 // CORS settings for deployment
 app.use(cors({
   origin: [
@@ -37,7 +47,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/vr-learning',
+    mongoUrl: MONGODB_URI,
     ttl: 24 * 60 * 60 // Session TTL (1 day)
   }),
   cookie: {
@@ -57,11 +67,6 @@ app.use(trackUserSession);
 
 app.use(cookieParser());
 app.use(bodyParser.json());
-
-// MongoDB Connection (Use MongoDB Atlas for production)
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/vr-learning-tool')
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // API Routes
 app.use('/api', signupRoute);
