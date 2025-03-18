@@ -7,7 +7,6 @@ import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import path from 'path';
-import rateLimit from 'express-rate-limit';
 
 import loginRoute from './Login';
 import signupRoute from './SignUp';
@@ -31,15 +30,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
-
-// Rate limiting configuration
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
-
-// Apply rate limiting to all routes
-app.use(limiter);
 
 // Session configuration with MongoDB store
 app.use(session({
