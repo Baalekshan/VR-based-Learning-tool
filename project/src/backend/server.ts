@@ -3,9 +3,11 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import rateLimit from 'express-rate-limit';
 
 import loginRoute from './Login';
 import signupRoute from './SignUp';
@@ -13,6 +15,7 @@ import passportRoute from './Passport';
 import meRoute from './auth';
 import profileRoute from './Profile';
 import scoreRoutes from './scores';
+import { trackUserSession } from './middleware/trackUserSession';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,14 +32,39 @@ app.use(cors({
   credentials: true,
 }));
 
+// Rate limiting configuration
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+
+// Apply rate limiting to all routes
+app.use(limiter);
+
+// Session configuration with MongoDB store
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/vr-learning',
+    ttl: 24 * 60 * 60 // Session TTL (1 day)
+  }),
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    sameSite: 'strict'
+  }
 }));
 
+// Initialize passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Track user sessions
+app.use(trackUserSession);
+
 app.use(cookieParser());
 app.use(bodyParser.json());
 
