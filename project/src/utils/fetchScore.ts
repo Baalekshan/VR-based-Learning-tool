@@ -6,6 +6,16 @@ interface FetchScoreResponse {
   score: { [activity: string]: number };
 }
 
+interface PastScore {
+  score: { [activity: string]: number };
+  timestamp: Date;
+  email: string;
+}
+
+interface FetchPastScoresResponse {
+  pastScores: PastScore[];
+}
+
 export const fetchScore = async (): Promise<FetchScoreResponse | null> => {
   try {
     const token = localStorage.getItem("token");
@@ -29,6 +39,33 @@ export const fetchScore = async (): Promise<FetchScoreResponse | null> => {
     return response.data;
   } catch (error) {
     console.error("Error fetching scores:", error);
+    return null;
+  }
+};
+
+export const fetchPastScores = async (): Promise<FetchPastScoresResponse | null> => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("No authentication token found.");
+      return null;
+    }
+
+    const response = await axios.get<FetchPastScoresResponse>(
+      `${API_BASE_URL}/get-past-scores`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+
+    console.log("Fetched past scores successfully:", response.data.pastScores);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching past scores:", error);
     return null;
   }
 };

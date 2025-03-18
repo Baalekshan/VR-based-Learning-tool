@@ -76,4 +76,36 @@ router.get("/get-score", authenticateUser, async (req: Request, res: Response): 
   }
 });
 
+router.get("/get-past-scores", authenticateUser, async (req: Request, res: Response): Promise<any> => {
+  try {
+    const email = (req as AuthRequest).user?.email;
+    if (!email) {
+      return res.status(400).json({ message: "Email not found in token." });
+    }
+
+    // Find all scores for the user, sorted by timestamp in descending order
+    const scoreDocs = await Score.find({ email }).sort({ timestamp: -1 });
+    
+    // Convert the scores to a format suitable for the frontend
+    const pastScores = scoreDocs.map(doc => {
+      let score: { [activity: string]: number };
+      if (doc.score instanceof Map) {
+        score = Object.fromEntries(doc.score);
+      } else {
+        score = doc.score;
+      }
+      return {
+        score,
+        timestamp: doc.timestamp,
+        email: doc.email
+      };
+    });
+
+    res.json({ pastScores });
+  } catch (error) {
+    console.error("Error fetching past scores:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 export default router;

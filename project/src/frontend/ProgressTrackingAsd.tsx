@@ -4,7 +4,7 @@ import bgImage from "../assets/background.png";
 import avatarIcon from "../assets/avatar.png";
 import userAvatar from "../assets/avatar.png";
 import subBg from "../assets/subBg.png";
-import { fetchScore } from "../utils/fetchScore";
+import { fetchScore, fetchPastScores } from "../utils/fetchScore";
 import { fetchProfile } from "../utils/fetchProfile";
 
 const colorMapping: { [key: string]: string } = {
@@ -30,18 +30,21 @@ const ProgressTrackingAsd: React.FC = () => {
   const [scores, setScores] = useState<{ [activity: string]: number }>({});
   const [userName, setUserName] = useState("your name");
   const [avatar, setAvatar] = useState("your avatar");
-    useEffect(() => {
-      const getProfile = async () => {
-        const profile = await fetchProfile();
-        if (profile?.name) {
-          setUserName(profile.name);
-        }
-        if (profile?.avatar) {
-          setAvatar(profile.avatar);
-        }
-      };
-      getProfile();
-    }, []);
+  const [pastScores, setPastScores] = useState<Array<{ score: { [activity: string]: number }, timestamp: Date, email: string }>>([]);
+  const [showPastScores, setShowPastScores] = useState(false);
+
+  useEffect(() => {
+    const getProfile = async () => {
+      const profile = await fetchProfile();
+      if (profile?.name) {
+        setUserName(profile.name);
+      }
+      if (profile?.avatar) {
+        setAvatar(profile.avatar);
+      }
+    };
+    getProfile();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,6 +55,18 @@ const ProgressTrackingAsd: React.FC = () => {
     };
     fetchData();
   }, []);
+
+  const handleViewPastScores = async () => {
+    const data = await fetchPastScores();
+    if (data && data.pastScores) {
+      setPastScores(data.pastScores);
+      setShowPastScores(true);
+    }
+  };
+
+  const handleBackToCurrent = () => {
+    setShowPastScores(false);
+  };
 
   return (
     <div className="progress-container">
@@ -72,28 +87,68 @@ const ProgressTrackingAsd: React.FC = () => {
 
         <div className="right-section">
           <div className="progress-chart-container">
-            <div className="progress-chart">
-              {Object.entries(scores).map(([activity, score]) => {
-                const percentage = (score / maxScores[activity]) * 100;
-                return (
-                  <div key={activity} className="progress-item">
-                    <label><h3>{activityMap[activity]}</h3></label>
-                    <div className="progress" style={{ height: "20px", width: "200px", margin: "0 auto" }}>
-                      <div
-                        className={`progress-bar ${colorMapping[activity] || "bg-primary"}`}
-                        role="progressbar"
-                        style={{ width: `${percentage}%` }}
-                        aria-valuenow={percentage}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      >
-                        {Math.round(percentage)}%
+            {!showPastScores ? (
+              <>
+                <div className="progress-chart">
+                  {Object.entries(scores).map(([activity, score]) => {
+                    const percentage = (score / maxScores[activity]) * 100;
+                    return (
+                      <div key={activity} className="progress-item">
+                        <label><h3>{activityMap[activity]}</h3></label>
+                        <div className="progress" style={{ height: "20px", width: "200px", margin: "0 auto" }}>
+                          <div
+                            className={`progress-bar ${colorMapping[activity] || "bg-primary"}`}
+                            role="progressbar"
+                            style={{ width: `${percentage}%` }}
+                            aria-valuenow={percentage}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                          >
+                            {Math.round(percentage)}%
+                          </div>
+                        </div>
                       </div>
+                    );
+                  })}
+                </div>
+                <button className="view-past-scores-btn" onClick={handleViewPastScores}>
+                  View Past Scores
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="past-scores-list">
+                  {pastScores.map((pastScore, index) => (
+                    <div key={index} className="past-score-item">
+                      <h4>Score from {new Date(pastScore.timestamp).toLocaleDateString()}</h4>
+                      {Object.entries(pastScore.score).map(([activity, score]) => {
+                        const percentage = (score / maxScores[activity]) * 100;
+                        return (
+                          <div key={activity} className="progress-item">
+                            <label><h3>{activityMap[activity]}</h3></label>
+                            <div className="progress" style={{ height: "20px", width: "200px", margin: "0 auto" }}>
+                              <div
+                                className={`progress-bar ${colorMapping[activity] || "bg-primary"}`}
+                                role="progressbar"
+                                style={{ width: `${percentage}%` }}
+                                aria-valuenow={percentage}
+                                aria-valuemin={0}
+                                aria-valuemax={100}
+                              >
+                                {Math.round(percentage)}%
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                  </div>
-                );
-              })}
-            </div> 
+                  ))}
+                </div>
+                <button className="back-to-current-btn" onClick={handleBackToCurrent}>
+                  Back to Current Scores
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -184,6 +239,40 @@ const ProgressTrackingAsd: React.FC = () => {
 
         .progress-bar {
           border-radius: 10px;
+        }
+
+        .view-past-scores-btn, .back-to-current-btn {
+          margin-top: 20px;
+          padding: 10px 20px;
+          background-color: #4CAF50;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+          transition: background-color 0.3s;
+        }
+
+        .view-past-scores-btn:hover, .back-to-current-btn:hover {
+          background-color: #45a049;
+        }
+
+        .past-scores-list {
+          max-height: 400px;
+          overflow-y: auto;
+          padding: 10px;
+        }
+
+        .past-score-item {
+          background: rgba(255, 255, 255, 0.1);
+          padding: 15px;
+          margin-bottom: 15px;
+          border-radius: 10px;
+        }
+
+        .past-score-item h4 {
+          margin-bottom: 15px;
+          color: #333;
         }
 
         @media (max-width: 768px) {
