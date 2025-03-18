@@ -21,14 +21,19 @@ const PORT = process.env.PORT || 5000;
 const BASE_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
 
 // MongoDB Connection (Use MongoDB Atlas for production)
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/vr-learning-tool';
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
+
+if (!process.env.MONGODB_URI && !process.env.MONGO_URI) {
+  console.error('❌ MongoDB URI not found in environment variables');
+  process.exit(1);
+}
 
 mongoose.connect(MONGODB_URI)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => {
-    console.error('❌ MongoDB connection error:', err);
-    process.exit(1); // Exit if MongoDB connection fails
-  });
+.then(() => console.log('✅ MongoDB connected'))
+.catch(err => {
+  console.error('❌ MongoDB connection error:', err);
+  process.exit(1); // Exit if MongoDB connection fails
+});
 
 // CORS settings for deployment
 app.use(cors({
