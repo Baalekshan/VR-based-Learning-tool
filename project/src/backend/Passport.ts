@@ -4,6 +4,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import User from './models/UserSchema';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import { config } from './config/config';
 
 dotenv.config();
 
@@ -25,7 +26,9 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: `${BASE_URL}/api/auth/google/callback`,
+        callbackURL: process.env.NODE_ENV === 'production'
+          ? 'https://vr-based-learning-tool.onrender.com/api/auth/google/callback'
+          : 'http://localhost:5000/api/auth/google/callback',
       },
       async (accessToken, refreshToken, profile, done) => {
         console.log('Google Profile:', profile);
@@ -93,7 +96,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         sameSite: 'strict',
         maxAge: 24 * 60 * 60 * 1000, // 1 day
       });
-      res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/selectionpage`);
+      res.redirect(`${config.clientBaseUrl}/selectionpage`);
     }
   );
 } else {
