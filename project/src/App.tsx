@@ -12,6 +12,8 @@ import CommunicationQuiz from "./frontend/CommunicationQuiz";
 import ObjectQuiz from "./frontend/ObjectQuiz";
 // @ts-ignore
 import TrafficScene from "./frontend/RoadCross";
+import VRGroceryLanding from "./frontend/VRGroceryLanding";
+import VRGroceryShopping from "./frontend/VRGroceryShopping";
 
 const isAuthenticated = () => {
   return !!localStorage.getItem("token");
@@ -28,6 +30,8 @@ function App() {
         {/* Public Routes */}
         <Route path="/" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/vr-grocery-landing" element={<VRGroceryLanding />} />
+        <Route path="/shopping" element={<VRGroceryShopping />} />
 
         {/* Protected Routes */}
         <Route path="/selectionpage" element={<PrivateRoute element={<SelectionPage />} />} />
@@ -39,6 +43,10 @@ function App() {
         <Route path="/communication-quiz" element={<PrivateRoute element={<CommunicationQuiz />} />} />
         <Route path="/object-quiz" element={<PrivateRoute element={<ObjectQuiz />} />} />
         <Route path="/road-crossing" element={<PrivateRoute element={<TrafficScene />} />} />
+        
+        {/* VR Grocery Routes */}
+        {/* <Route path="/vr-grocery-landing" element={<PrivateRoute element={<VRGroceryLanding />} />} />
+        <Route path="/shopping" element={<PrivateRoute element={<VRGroceryShopping />} />} /> */}
       </Routes>
     </Router>
   );

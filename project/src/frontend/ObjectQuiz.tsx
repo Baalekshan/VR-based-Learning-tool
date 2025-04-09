@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import '../styles/ObjectQuizStyles.css';
+import '../styles/QuizBackground.css';
 import { submitScore } from '../utils/submitScore';
 import useAuth from '../utils/UseAuth';
-import selectionBg from '../assets/selectionBg.jpg';
+
 type Question = {
   question: string;
   options: string[];
@@ -20,10 +21,16 @@ const ObjectQuiz: React.FC = () => {
   const email = useAuth();
 
   useEffect(() => {
+    document.body.classList.add('quiz-page');
+    
     fetch('quizData.json')
       .then(response => response.json())
       .then((data: { objectQuiz: Question[] }) => setQuestions(data.objectQuiz))
       .catch(error => console.error('Error loading quiz data:', error));
+      
+    return () => {
+      document.body.classList.remove('quiz-page');
+    };
   }, []);
 
   const handleOptionClick = (option: string) => {
@@ -55,43 +62,41 @@ const ObjectQuiz: React.FC = () => {
   const progressPercentage = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   return (
-    <div className="container text-center mt-4">
-      {/* Background Image */}
-      {/* <img src={selectionBg} alt="Background" className="background-image" /> */}
-      <h3 className="fw-bold text-white">Object and Color Identification Quiz</h3>
+    <div className="quiz-background">
+      <div className="container text-center mt-4">
+        <h3 className="fw-bold text-white">Object and Color Identification Quiz</h3>
 
-      {/* Progress Bar */}
-      <div className="progress mb-4" style={{ height: '30px' }}>
-        <ProgressBar now={progressPercentage} animated className="w-100" style={{height: '30px', borderRadius: '30px'}}/>
-      </div>
+        <div className="progress mb-4" style={{ height: '30px' }}>
+          <ProgressBar now={progressPercentage} animated className="w-100" style={{height: '30px', borderRadius: '30px'}}/>
+        </div>
 
-      {/* Quiz Card */}
-      <div className="quiz-card">
-        {quizCompleted ? (
-          <div>
-            <h3>Quiz Completed! 🎉</h3>
-            <p>Your score: {score}/{questions.length}</p>
-            <button className="btn btn-primary" onClick={handleRestartQuiz}>Restart Quiz</button>
-          </div>
-        ) : (
-          questions.length > 0 && (
-            <>
-              <h3>{questions[currentQuestionIndex].question}</h3>
-              <div className="row mt-3">
-                {questions[currentQuestionIndex].options.map((option, index) => (
-                  <div key={index} className="col-6 p-2">
-                    <button 
-                      className={`quiz-option ${selectedOption === option ? 'selected' : ''}`} 
-                      onClick={() => handleOptionClick(option)}
-                    >
-                      {option}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </>
-          )
-        )}
+        <div className="quiz-card">
+          {quizCompleted ? (
+            <div>
+              <h3>Quiz Completed! ��</h3>
+              <p>Your score: {score}/{questions.length}</p>
+              <button className="btn btn-primary" onClick={handleRestartQuiz}>Restart Quiz</button>
+            </div>
+          ) : (
+            questions.length > 0 && (
+              <>
+                <h3>{questions[currentQuestionIndex].question}</h3>
+                <div className="row mt-3">
+                  {questions[currentQuestionIndex].options.map((option, index) => (
+                    <div key={index} className="col-6 p-2">
+                      <button 
+                        className={`quiz-option ${selectedOption === option ? 'selected' : ''}`} 
+                        onClick={() => handleOptionClick(option)}
+                      >
+                        {option}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )
+          )}
+        </div>
       </div>
     </div>
   );

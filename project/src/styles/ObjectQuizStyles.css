@@ -1,4 +1,5 @@
-body {
+/* Remove the body background setting since it's now in QuizBackground.css */
+/* body {
     background: url('../assets/selectionBg.jpg') no-repeat center center fixed;
     background-size: cover;
     margin: 0;
@@ -7,7 +8,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
+} */
 
 .container {
     max-width: 700px;
@@ -50,23 +51,24 @@ body {
 }
 
 .quiz-option:hover {
-    background: rgba(255, 255, 255, 0.705);
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
 }
 
 .quiz-option.selected {
-    background: rgba(40, 167, 69, 0.6);
-    border-color: rgba(40, 167, 69, 0.8);
+    background: rgba(76, 175, 80, 0.5);
+    transform: scale(1.05);
 }
 
 .progress {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.2);
     border-radius: 30px;
+    overflow: hidden;
 }
 
 @media (max-width: 768px) {
     .quiz-option {
-        font-size: 2.5rem;
+        font-size: 2rem;
         height: 100px;
     }
 }

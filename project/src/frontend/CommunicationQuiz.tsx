@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import "../styles/CommunicationQuizStyles.css";
+import "../styles/QuizBackground.css";
 import { submitScore } from '../utils/submitScore';
 import useAuth from "../utils/UseAuth";
-import selectionBg from "../assets/selectionBg.jpg";
 
 interface Question {
   question: string;
@@ -26,6 +26,8 @@ const CommunicationQuiz: React.FC = () => {
   const email = useAuth();
 
   useEffect(() => {
+    document.body.classList.add('quiz-page');
+    
     fetch("quizData.json")
       .then((response) => response.json())
       .then((data: QuizData) => {
@@ -33,6 +35,10 @@ const CommunicationQuiz: React.FC = () => {
         setQuestions(data[selectedQuiz] || []);
       })
       .catch((error) => console.error("Error loading quiz data:", error));
+      
+    return () => {
+      document.body.classList.remove('quiz-page');
+    };
   }, [selectedQuiz]);
 
   const handleAnswer = (selectedAnswer: string) => {
@@ -57,46 +63,47 @@ const CommunicationQuiz: React.FC = () => {
   };
 
   return (
-    <div className="quiz-container">
-      {/* <img src={selectionBg} alt="Background" className="background-image" /> */}
-      <h2 className="quiz-title">Image Quiz</h2>
-      <ProgressBar
-        animated
-        now={((currentQuestion + 1) / questions.length) * 100}
-        className="progress-bar-custom"
-        style={{ height: "30px", borderRadius: "30px" }}
-      />
-      {quizCompleted ? (
-        <div className="question-card">
-          <h2>Quiz Completed! 🎉</h2>
-          <h3>Your score is {score}/{questions.length}</h3>
-          <button className="restart-button" onClick={handleRestart}>
-            Restart Quiz
-          </button>
-        </div>
-      ) : (
-        <div className="question-card">
-          <h3 className="question-text">{questions[currentQuestion]?.question}</h3>
-          {questions[currentQuestion]?.imageUrl && (
-            <img
-              src={questions[currentQuestion].imageUrl}
-              alt="Question"
-              className="question-image"
-            />
-          )}
-          <div className="options-list">
-            {questions[currentQuestion]?.options.map((option, index) => (
-              <button
-                key={index}
-                className="option-button"
-                onClick={() => handleAnswer(option)}
-              >
-                {option}
-              </button>
-            ))}
+    <div className="quiz-background">
+      <div className="quiz-container">
+        <h2 className="quiz-title">Image Quiz</h2>
+        <ProgressBar
+          animated
+          now={((currentQuestion + 1) / questions.length) * 100}
+          className="progress-bar-custom"
+          style={{ height: "30px", borderRadius: "30px" }}
+        />
+        {quizCompleted ? (
+          <div className="question-card">
+            <h2>Quiz Completed! 🎉</h2>
+            <h3>Your score is {score}/{questions.length}</h3>
+            <button className="restart-button" onClick={handleRestart}>
+              Restart Quiz
+            </button>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="question-card">
+            <h3 className="question-text">{questions[currentQuestion]?.question}</h3>
+            {questions[currentQuestion]?.imageUrl && (
+              <img
+                src={questions[currentQuestion].imageUrl}
+                alt="Question"
+                className="question-image"
+              />
+            )}
+            <div className="options-list">
+              {questions[currentQuestion]?.options.map((option, index) => (
+                <button
+                  key={index}
+                  className="option-button"
+                  onClick={() => handleAnswer(option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
