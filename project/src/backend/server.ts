@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -75,6 +75,10 @@ app.use(trackUserSession);
 app.use(cookieParser());
 app.use(bodyParser.json());
 
+// Serve static files
+const frontendPath = path.join(__dirname, 'client');
+app.use(express.static(frontendPath));
+
 // API Routes
 app.use('/api', signupRoute);
 app.use('/api', loginRoute);
@@ -84,18 +88,8 @@ app.use('/api', profileRoute);
 app.use('/api', scoreRoutes);
 app.use('/api', coloringProgress);
 
-// Serve the frontend
-const frontendPath = path.join(__dirname, 'client');
-app.use(express.static(frontendPath));
-
-// Handle client-side routing
-app.get('*', (req, res) => {
-  // Don't serve index.html for API routes
-  if (req.path.startsWith('/api')) {
-    return res.status(404).json({ message: 'API route not found' });
-  }
-  
-  // Serve index.html for all other routes
+// Handle client-side routing - must be after API routes
+app.get('/*', (_req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
