@@ -55,43 +55,43 @@ const ObjectQuiz: React.FC = () => {
   const progressPercentage = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   return (
-    <div className="container text-center mt-4">
-      {/* Background Image */}
-      {/* <img src={selectionBg} alt="Background" className="background-image" /> */}
-      <h3 className="fw-bold text-white">Object and Color Identification Quiz</h3>
+    <div className="quiz-background">
+      <div className="container text-center mt-4">
+        <h3 className="fw-bold text-white">Object and Color Identification Quiz</h3>
 
-      {/* Progress Bar */}
-      <div className="progress mb-4" style={{ height: '30px' }}>
-        <ProgressBar now={progressPercentage} animated className="w-100" style={{height: '30px', borderRadius: '30px'}}/>
-      </div>
+        {/* Progress Bar */}
+        <div className="progress mb-4" style={{ height: '30px' }}>
+          <ProgressBar now={progressPercentage} animated className="w-100" style={{height: '30px', borderRadius: '30px'}}/>
+        </div>
 
-      {/* Quiz Card */}
-      <div className="quiz-card">
-        {quizCompleted ? (
-          <div>
-            <h3>Quiz Completed! 🎉</h3>
-            <p>Your score: {score}/{questions.length}</p>
-            <button className="btn btn-primary" onClick={handleRestartQuiz}>Restart Quiz</button>
-          </div>
-        ) : (
-          questions.length > 0 && (
-            <>
-              <h3>{questions[currentQuestionIndex].question}</h3>
-              <div className="row mt-3">
-                {questions[currentQuestionIndex].options.map((option, index) => (
-                  <div key={index} className="col-6 p-2">
-                    <button 
-                      className={`quiz-option ${selectedOption === option ? 'selected' : ''}`} 
-                      onClick={() => handleOptionClick(option)}
-                    >
-                      {option}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </>
-          )
-        )}
+        {/* Quiz Card */}
+        <div className="quiz-card">
+          {quizCompleted ? (
+            <div>
+              <h3>Quiz Completed! 🎉</h3>
+              <p>Your score: {score}/{questions.length}</p>
+              <button className="btn btn-primary" onClick={handleRestartQuiz}>Restart Quiz</button>
+            </div>
+          ) : (
+            questions.length > 0 && (
+              <>
+                <h3>{questions[currentQuestionIndex].question}</h3>
+                <div className="row mt-3">
+                  {questions[currentQuestionIndex].options.map((option, index) => (
+                    <div key={index} className="col-6 p-2">
+                      <button 
+                        className={`quiz-option ${selectedOption === option ? 'selected' : ''}`} 
+                        onClick={() => handleOptionClick(option)}
+                      >
+                        {option}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )
+          )}
+        </div>
       </div>
     </div>
   );
