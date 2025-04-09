@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import bgImage from "../assets/loginBg.jpg";
 import avatarImage from "../assets/vr-avatar.png";
 import axios from "axios";
+import LazyImage from "../components/LazyImage";
+import "../styles/LazyImage.css";
 
 interface LoginResponse {
   message: string;
@@ -59,11 +61,11 @@ function Login() {
   
   return (
     <div className="signup-container">
-     
-      <img
+      <LazyImage
         src={bgImage}
         alt="Background"
         className="background-image"
+        placeholderColor="#f0f0f0"
       />
       <div className="background-overlay"></div>
 
@@ -139,10 +141,11 @@ function Login() {
       </div>
 
       {/* Avatar Image Overlapping */}
-      <img
+      <LazyImage
         src={avatarImage}
         alt="VR Avatar"
         className="avatar"
+        placeholderColor="#e0e0e0"
       />
 
       {/* Styles */}
