@@ -88,7 +88,14 @@ app.use('/api', coloringProgress);
 const frontendPath = path.join(__dirname, 'client');
 app.use(express.static(frontendPath));
 
+// Handle client-side routing
 app.get('*', (req, res) => {
+  // Don't serve index.html for API routes
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ message: 'API route not found' });
+  }
+  
+  // Serve index.html for all other routes
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
