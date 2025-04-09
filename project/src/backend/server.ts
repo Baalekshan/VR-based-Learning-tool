@@ -14,6 +14,7 @@ import passportRoute from './Passport';
 import meRoute from './auth';
 import profileRoute from './Profile';
 import scoreRoutes from './scores';
+import coloringProgress from './coloringProgress';
 import { trackUserSession } from './middleware/trackUserSession';
 
 const app = express();
@@ -81,6 +82,7 @@ app.use('/api', passportRoute);
 app.use('/api', meRoute);
 app.use('/api', profileRoute);
 app.use('/api', scoreRoutes);
+app.use('/api', coloringProgress);
 
 // Serve the frontend
 const frontendPath = path.join(__dirname, 'client');

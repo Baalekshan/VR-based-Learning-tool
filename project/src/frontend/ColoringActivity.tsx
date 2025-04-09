@@ -59,19 +59,37 @@ const ColoringActivity: React.FC = () => {
   const [canvasStates, setCanvasStates] = useState<ImageData[]>([]);
   const [isFillMode, setIsFillMode] = useState(false);
   const [canvasState, setCanvasState] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Load the current outline image
   useEffect(() => {
     const loadImages = () => {
-      const currentImage = coloringImages[currentImageIndex];
-      
-      const outlineImg = new Image();
-      outlineImg.src = currentImage.outlineSrc;
-      outlineImg.onload = () => {
-        setOutlineImage(outlineImg);
-        drawOutlineImage(outlineImg);
-      };
+      try {
+        setIsLoading(true);
+        setError(null);
+        const currentImage = coloringImages[currentImageIndex];
+        console.log('Loading image:', currentImage.outlineSrc);
+        
+        const outlineImg = new Image();
+        outlineImg.src = currentImage.outlineSrc;
+        outlineImg.onload = () => {
+          console.log('Image loaded successfully');
+          setOutlineImage(outlineImg);
+          drawOutlineImage(outlineImg);
+          setIsLoading(false);
+        };
+        outlineImg.onerror = (error) => {
+          console.error('Error loading image:', error);
+          setError('Failed to load the coloring image. Please try refreshing the page.');
+          setIsLoading(false);
+        };
+      } catch (error) {
+        console.error('Error in loadImages:', error);
+        setError('An error occurred while loading the coloring activity.');
+        setIsLoading(false);
+      }
     };
     
     loadImages();
@@ -79,32 +97,46 @@ const ColoringActivity: React.FC = () => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {
+      console.error('Canvas element not found');
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      console.error('Could not get 2D context');
+      return;
+    }
 
     // Set canvas size to match window size
     const resizeCanvas = () => {
-      const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-      
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      
-      ctx.scale(dpr, dpr);
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // Redraw the outline image after resize
-      if (outlineImage) {
-        drawOutlineImage(outlineImage);
+      try {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        
+        ctx.scale(dpr, dpr);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Redraw the outline image after resize
+        if (outlineImage) {
+          drawOutlineImage(outlineImage);
+        }
+      } catch (error) {
+        console.error('Error in resizeCanvas:', error);
       }
     };
 
+    // Initial resize
     resizeCanvas();
+
+    // Add resize listener
     window.addEventListener('resize', resizeCanvas);
 
+    // Cleanup
     return () => {
       window.removeEventListener('resize', resizeCanvas);
     };
@@ -380,193 +412,209 @@ const ColoringActivity: React.FC = () => {
   }, []);
 
   return (
-    <div className="coloring-activity">
-      <div className="toolbar">
-        <button onClick={handleHome} className="home-button">
-          Home
-        </button>
-        <div className="image-title">
-          {coloringImages[currentImageIndex].title}
+    <div className="min-h-screen bg-gray-100 p-4">
+      {isLoading && (
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-xl">Loading coloring activity...</div>
         </div>
-        <div className="color-picker">
-          <button
-            className="color-button"
-            style={{ backgroundColor: currentColor }}
-            onClick={() => setShowColorPicker(!showColorPicker)}
-          />
-          {showColorPicker && (
-            <div className="color-options">
-              {colorOptions.map((color) => (
-                <button
-                  key={color.value}
-                  className="color-option"
-                  style={{ backgroundColor: color.value }}
-                  onClick={() => {
-                    setCurrentColor(color.value);
-                    setShowColorPicker(false);
-                  }}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-        <input
-          type="range"
-          min="1"
-          max="20"
-          value={brushSize}
-          onChange={(e) => setBrushSize(Number(e.target.value))}
-          className="brush-size"
-        />
-        <button onClick={clearCanvas} className="clear-button">
-          Clear
-        </button>
-        <div className="navigation-buttons">
-          <button onClick={handlePrevImage} className="nav-button">
-            Previous
-          </button>
-          <button onClick={handleNextImage} className="nav-button">
-            Next
-          </button>
-        </div>
-        <button onClick={toggleMode} className="toggle-button">
-          {isFillMode ? 'Draw' : 'Fill'}
-        </button>
-        <button onClick={handleErase} className="erase-button">
-          Erase
-        </button>
-        <button onClick={undo} className="undo-button">
-          Undo
-        </button>
-      </div>
+      )}
       
-      <canvas
-        ref={canvasRef}
-        onMouseDown={isFillMode ? handleFill : startDrawing}
-        onMouseMove={draw}
-        onMouseUp={stopDrawing}
-        onMouseOut={stopDrawing}
-        className="drawing-canvas"
-      />
-      <style>{`
-        .coloring-activity {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-          overflow: hidden;
-        }
+      {error && (
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-xl text-red-600">{error}</div>
+        </div>
+      )}
+      
+      {!isLoading && !error && (
+        <div className="coloring-activity">
+          <div className="toolbar">
+            <button onClick={handleHome} className="home-button">
+              Home
+            </button>
+            <div className="image-title">
+              {coloringImages[currentImageIndex].title}
+            </div>
+            <div className="color-picker">
+              <button
+                className="color-button"
+                style={{ backgroundColor: currentColor }}
+                onClick={() => setShowColorPicker(!showColorPicker)}
+              />
+              {showColorPicker && (
+                <div className="color-options">
+                  {colorOptions.map((color) => (
+                    <button
+                      key={color.value}
+                      className="color-option"
+                      style={{ backgroundColor: color.value }}
+                      onClick={() => {
+                        setCurrentColor(color.value);
+                        setShowColorPicker(false);
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+            <input
+              type="range"
+              min="1"
+              max="20"
+              value={brushSize}
+              onChange={(e) => setBrushSize(Number(e.target.value))}
+              className="brush-size"
+            />
+            <button onClick={clearCanvas} className="clear-button">
+              Clear
+            </button>
+            <div className="navigation-buttons">
+              <button onClick={handlePrevImage} className="nav-button">
+                Previous
+              </button>
+              <button onClick={handleNextImage} className="nav-button">
+                Next
+              </button>
+            </div>
+            <button onClick={toggleMode} className="toggle-button">
+              {isFillMode ? 'Draw' : 'Fill'}
+            </button>
+            <button onClick={handleErase} className="erase-button">
+              Erase
+            </button>
+            <button onClick={undo} className="undo-button">
+              Undo
+            </button>
+          </div>
+          
+          <canvas
+            ref={canvasRef}
+            onMouseDown={isFillMode ? handleFill : startDrawing}
+            onMouseMove={draw}
+            onMouseUp={stopDrawing}
+            onMouseOut={stopDrawing}
+            className="drawing-canvas"
+          />
+          <style>{`
+            .coloring-activity {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100vw;
+              height: 100vh;
+              display: flex;
+              flex-direction: column;
+              background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+              overflow: hidden;
+            }
 
-        .toolbar {
-          position: fixed;
-          top: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          display: flex;
-          align-items: center;
-          gap: 20px;
-          background: white;
-          padding: 15px 30px;
-          border-radius: 10px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          z-index: 1000;
-        }
+            .toolbar {
+              position: fixed;
+              top: 20px;
+              left: 50%;
+              transform: translateX(-50%);
+              display: flex;
+              align-items: center;
+              gap: 20px;
+              background: white;
+              padding: 15px 30px;
+              border-radius: 10px;
+              box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+              z-index: 1000;
+            }
 
-        .home-button {
-          padding: 8px 16px;
-          background: #4a90e2;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          font-weight: bold;
-        }
+            .home-button {
+              padding: 8px 16px;
+              background: #4a90e2;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-weight: bold;
+            }
 
-        .clear-button {
-          padding: 8px 16px;
-          background: #e74c3c;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-        }
+            .clear-button {
+              padding: 8px 16px;
+              background: #e74c3c;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            }
 
-        .navigation-buttons {
-          display: flex;
-          gap: 10px;
-        }
+            .navigation-buttons {
+              display: flex;
+              gap: 10px;
+            }
 
-        .nav-button {
-          padding: 8px 16px;
-          background: #9b59b6;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-        }
+            .nav-button {
+              padding: 8px 16px;
+              background: #9b59b6;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            }
 
-        .color-picker {
-          position: relative;
-        }
+            .color-picker {
+              position: relative;
+            }
 
-        .color-button {
-          width: 40px;
-          height: 40px;
-          border: 2px solid #ddd;
-          border-radius: 50%;
-          cursor: pointer;
-        }
+            .color-button {
+              width: 40px;
+              height: 40px;
+              border: 2px solid #ddd;
+              border-radius: 50%;
+              cursor: pointer;
+            }
 
-        .color-options {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 5px;
-          background: white;
-          padding: 10px;
-          border-radius: 5px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          z-index: 1000;
-        }
+            .color-options {
+              position: absolute;
+              top: 100%;
+              left: 0;
+              display: grid;
+              grid-template-columns: repeat(4, 1fr);
+              gap: 5px;
+              background: white;
+              padding: 10px;
+              border-radius: 5px;
+              box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+              z-index: 1000;
+            }
 
-        .color-option {
-          width: 30px;
-          height: 30px;
-          border: none;
-          border-radius: 50%;
-          cursor: pointer;
-        }
+            .color-option {
+              width: 30px;
+              height: 30px;
+              border: none;
+              border-radius: 50%;
+              cursor: pointer;
+            }
 
-        .brush-size {
-          width: 100px;
-        }
+            .brush-size {
+              width: 100px;
+            }
 
-        .image-title {
-          font-size: 18px;
-          font-weight: bold;
-          color: #333;
-        }
+            .image-title {
+              font-size: 18px;
+              font-weight: bold;
+              color: #333;
+            }
 
-        .drawing-canvas {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: white;
-          touch-action: none;
-        }
+            .drawing-canvas {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: white;
+              touch-action: none;
+            }
 
-        button:hover {
-          opacity: 0.9;
-        }
-      `}</style>
+            button:hover {
+              opacity: 0.9;
+            }
+          `}</style>
+        </div>
+      )}
     </div>
   );
 };
