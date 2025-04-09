@@ -27,6 +27,7 @@
     "@types/passport": "^1.0.17",
     "@types/passport-apple": "^2.0.3",
     "@types/passport-google-oauth20": "^2.0.16",
+    "@types/three": "^0.175.0",
     "aframe": "^1.6.0",
     "aframe-look-at-component": "^1.0.0",
     "axios": "^1.7.9",
@@ -47,7 +48,8 @@
     "react-bootstrap": "^2.10.9",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.5",
-    "react-toastify": "^11.0.5"
+    "react-toastify": "^11.0.5",
+    "three": "^0.175.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

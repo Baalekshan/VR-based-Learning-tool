@@ -1,0 +1,16 @@
+{
+  "routes": {
+    "landing": "/grocery",
+    "shopping": "/grocery/shopping",
+    "checkout": "/grocery/checkout",
+    "inventory": "/grocery/inventory",
+    "profile": "/grocery/profile"
+  },
+  "api": {
+    "base": "/api/grocery",
+    "products": "/api/grocery/products",
+    "cart": "/api/grocery/cart",
+    "orders": "/api/grocery/orders",
+    "user": "/api/grocery/user"
+  }
+} 
