@@ -10,6 +10,7 @@ import ProgressTrackingID from "./frontend/ProgressTrackingID";
 import ProfilePage from "./frontend/Profile";
 import CommunicationQuiz from "./frontend/CommunicationQuiz";
 import ObjectQuiz from "./frontend/ObjectQuiz";
+import ColoringActivity from "./frontend/ColoringActivity";
 // @ts-ignore
 import TrafficScene from "./frontend/RoadCross";
 import logo from "./assets/Fun Beans Logo.png";
@@ -50,6 +51,7 @@ function App() {
           <Route path="/communication-quiz" element={<PrivateRoute element={<CommunicationQuiz />} />} />
           <Route path="/object-quiz" element={<PrivateRoute element={<ObjectQuiz />} />} />
           <Route path="/road-crossing" element={<PrivateRoute element={<TrafficScene />} />} />
+          <Route path="/coloring-activity" element={<PrivateRoute element={<ColoringActivity />} />} />
         </Routes>
       </div>
     </Router>

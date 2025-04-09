@@ -1,6 +1,7 @@
 import axios from "axios";
+import { config } from '../config';
 
-const API_BASE_URL = "https://vr-based-learning-tool.onrender.com/api";
+const API_BASE_URL = config.apiBaseUrl;
 
 interface Profile {
   name?: string;
