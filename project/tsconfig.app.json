@@ -24,7 +24,7 @@
     
     /* React specific */
     "jsxImportSource": "react",
-    "types": ["react", "react-dom"]
+    "types": ["react", "react-dom", "three"]
   },
   "include": ["src"]
 }

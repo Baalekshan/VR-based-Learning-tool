@@ -5,7 +5,7 @@ const VRGroceryLanding: React.FC = () => {
   const navigate = useNavigate();
 
   const handleStartVR = () => {
-    navigate('/vr-grocery-3d');
+    navigate('/store-3d');
   };
 
   const handleBackToHome = () => {

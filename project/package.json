@@ -18,6 +18,9 @@
   "dependencies": {
     "@mui/icons-material": "^6.4.3",
     "@mui/material": "^6.4.3",
+    "@react-three/drei": "^10.0.6",
+    "@react-three/fiber": "^9.1.2",
+    "@react-three/xr": "^6.6.13",
     "@types/aframe": "^1.2.7",
     "@types/cookie-parser": "^1.4.8",
     "@types/dotenv": "^6.1.1",

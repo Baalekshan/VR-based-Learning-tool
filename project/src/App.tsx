@@ -15,6 +15,7 @@ import TrafficScene from "./frontend/RoadCross";
 import VRGroceryLanding from "./frontend/VRGroceryLanding";
 // @ts-ignore
 import VRGroceryShopping from "./frontend/VRGroceryShopping";
+import Store3D from "./frontend/Store3D";
 
 const isAuthenticated = () => {
   return !!localStorage.getItem("token");
@@ -33,6 +34,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/vr-grocery" element={<VRGroceryLanding />} />
         <Route path="/shopping" element={<VRGroceryShopping />} />
+        <Route path="/store-3d" element={<Store3D />} />
 
         {/* Protected Routes */}
         <Route path="/selectionpage" element={<PrivateRoute element={<SelectionPage />} />} />
