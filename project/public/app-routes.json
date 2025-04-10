@@ -1,0 +1,34 @@
+{
+  "publicRoutes": {
+    "home": "/",
+    "login": "/login",
+    "vrGrocery": "/vr-grocery",
+    "shopping": "/shopping"
+  },
+  "protectedRoutes": {
+    "selectionPage": "/selectionpage",
+    "asdPage": "/asdpage",
+    "idPage": "/idpage",
+    "progressTrackAsd": "/progress-track-asd",
+    "progressTrackId": "/progress-track-id",
+    "userProfile": "/user-profile",
+    "communicationQuiz": "/communication-quiz",
+    "objectQuiz": "/object-quiz",
+    "roadCrossing": "/road-crossing"
+  },
+  "components": {
+    "SignUp": "frontend/SignUp",
+    "Login": "frontend/Login",
+    "SelectionPage": "frontend/SelectionPage",
+    "Asd": "frontend/Asd",
+    "ID": "frontend/ID",
+    "ProgressTrackingAsd": "frontend/ProgressTrackingAsd",
+    "ProgressTrackingID": "frontend/ProgressTrackingID",
+    "ProfilePage": "frontend/Profile",
+    "CommunicationQuiz": "frontend/CommunicationQuiz",
+    "ObjectQuiz": "frontend/ObjectQuiz",
+    "TrafficScene": "frontend/RoadCross",
+    "VRGroceryLanding": "frontend/VRGroceryLanding",
+    "VRGroceryShopping": "frontend/VRGroceryShopping"
+  }
+} 

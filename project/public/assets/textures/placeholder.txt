@@ -1,0 +1,31 @@
+This is a placeholder file.
+
+To create realistic textures for the VR grocery store, you need to:
+
+1. Find or create high-quality texture images for:
+   - Floor (floor.jpg)
+   - Walls (wall.jpg)
+   - Ceiling (ceiling.jpg)
+   - Shelves (shelf.jpg)
+   - Products (apple.jpg, banana.jpg, etc.)
+
+2. Place these texture files in this directory.
+
+3. Recommended texture specifications:
+   - Format: JPG or PNG
+   - Resolution: 1024x1024 or 2048x2048 pixels
+   - File size: Optimize for web use (under 500KB per texture)
+
+4. For realistic grocery store textures, consider:
+   - Tile patterns for floors
+   - Light-colored walls with subtle patterns
+   - Drop ceiling textures
+   - Metal or wood shelf textures
+   - High-quality product images with transparent backgrounds
+
+You can find free textures at:
+- https://polyhaven.com/textures
+- https://ambientcg.com/
+- https://www.textures.com/ (some free textures available)
+
+For the best VR experience, use seamless textures that tile well. 
