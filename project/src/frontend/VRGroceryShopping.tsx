@@ -155,7 +155,14 @@ const VRGroceryShopping: React.FC = () => {
                   onClick={() => handleProductSelect(product)}
                 >
                   <div className="product-image">
-                    <img src={product.imageUrl} alt={product.name} />
+                    <img 
+                      src={product.imageUrl} 
+                      alt={product.name}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/images/products/placeholder.jpg';
+                      }}
+                    />
                   </div>
                   <div className="product-info">
                     <h3>{product.name}</h3>
@@ -189,7 +196,14 @@ const VRGroceryShopping: React.FC = () => {
                   return (
                     <div key={cartItem.id} className="cart-item">
                       <div className="cart-item-image">
-                        <img src={product.imageUrl} alt={product.name} />
+                        <img 
+                          src={product.imageUrl} 
+                          alt={product.name}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/images/products/placeholder.jpg';
+                          }}
+                        />
                       </div>
                       <div className="cart-item-details">
                         <h3>{product.name}</h3>
@@ -398,19 +412,19 @@ const VRGroceryShopping: React.FC = () => {
         }
         
         .product-card {
+          border: 1px solid #ddd;
+          border-radius: 8px;
           padding: 15px;
-          border-radius: 10px;
-          background: #f9f9f9;
+          margin: 10px;
           cursor: pointer;
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
+          transition: transform 0.2s, box-shadow 0.2s;
+          background: white;
+          width: 200px;
         }
         
         .product-card:hover {
           transform: translateY(-5px);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .product-card.selected {
@@ -421,7 +435,7 @@ const VRGroceryShopping: React.FC = () => {
           width: 100%;
           height: 150px;
           overflow: hidden;
-          border-radius: 8px;
+          border-radius: 4px;
           margin-bottom: 10px;
         }
         
@@ -429,33 +443,26 @@ const VRGroceryShopping: React.FC = () => {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform 0.3s ease;
-        }
-        
-        .product-card:hover .product-image img {
-          transform: scale(1.05);
         }
         
         .product-info {
           flex: 1;
-          display: flex;
-          flex-direction: column;
         }
         
         .product-info h3 {
           margin: 0 0 5px 0;
-          font-size: 18px;
+          font-size: 1.1em;
         }
         
         .price {
+          color: #2c5282;
           font-weight: bold;
-          color: #4CAF50;
           margin: 5px 0;
         }
         
         .category {
-          font-size: 14px;
           color: #666;
+          font-size: 0.9em;
           margin: 5px 0;
         }
         
@@ -472,17 +479,15 @@ const VRGroceryShopping: React.FC = () => {
         .cart-item {
           display: flex;
           align-items: center;
-          gap: 15px;
-          padding: 15px;
-          background: #f9f9f9;
-          border-radius: 10px;
-          position: relative;
+          padding: 10px;
+          border-bottom: 1px solid #eee;
         }
         
         .cart-item-image {
           width: 60px;
           height: 60px;
-          border-radius: 8px;
+          margin-right: 15px;
+          border-radius: 4px;
           overflow: hidden;
         }
         

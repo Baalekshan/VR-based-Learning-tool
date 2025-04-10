@@ -15,7 +15,7 @@ export const products: Product[] = [
     category: "Fruits",
     price: 2.99,
     description: "Crisp and sweet red apples, perfect for snacking or baking",
-    imageUrl: "/images/products/apple.jpg"
+    imageUrl: "/images/products/apples.jpg"
   },
   {
     id: 2,
@@ -43,7 +43,7 @@ export const products: Product[] = [
   },
   {
     id: 5,
-    name: "Chicken Breast",
+    name: "Whole Chicken",
     category: "Meat",
     price: 7.99,
     description: "Boneless, skinless chicken breast fillets",
@@ -55,7 +55,7 @@ export const products: Product[] = [
     category: "Fruits",
     price: 1.99,
     description: "Ripe yellow bananas, rich in potassium",
-    imageUrl: "/images/products/banana.jpg"
+    imageUrl: "/images/products/bananas.jpg"
   },
   {
     id: 7,
@@ -79,7 +79,7 @@ export const products: Product[] = [
     category: "Vegetables",
     price: 2.49,
     description: "Organic carrots, perfect for snacking or cooking",
-    imageUrl: "/images/products/carrots.jpg"
+    imageUrl: "/images/products/carrots.jpeg"
   },
   {
     id: 10,
