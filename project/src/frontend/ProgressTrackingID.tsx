@@ -12,20 +12,23 @@ const colorMapping: { [key: string]: string } = {
   "object-quiz": "bg-warning",
   "road-crossing": "bg-danger",
   "coloring-activity": "bg-info",
+  "grocery-shopping": "bg-primary"
 };
 
 const activityMap: Record<string, string> = {
   "communication-quiz": "Communication Quiz",
   "object-quiz": "Object Quiz",
   "road-crossing": "Road Crossing",
-  "coloring-activity": "Coloring Activity"
+  "coloring-activity": "Coloring Activity",
+  "grocery-shopping": "Grocery Shopping"
 };
 
 const scoreMap: Record<string, number> = {
   "communication-quiz": 5,
   "object-quiz": 10,
   "road-crossing": 10,
-  "coloring-activity": 4 
+  "coloring-activity": 4,
+  "grocery-shopping": 1
 };
 
 const ProgressTrackingID: React.FC = () => {
