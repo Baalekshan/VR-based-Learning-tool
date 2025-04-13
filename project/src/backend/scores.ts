@@ -13,7 +13,7 @@ router.post("/submit-score", authenticateUser, async (req: Request, res: Respons
       return res.status(400).json({ message: "Activity type, score, and email are required." });
     }
 
-    if (!["communication-quiz", "object-quiz", "road-crossing", "coloring-activity"].includes(activity)) {
+    if (!validateActivityType(activity)) {
       return res.status(400).json({ message: "Invalid activity type." });
     }
 
@@ -107,5 +107,17 @@ router.get("/get-past-scores", authenticateUser, async (req: Request, res: Respo
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+// Schema validation for request body
+const validateActivityType = (activity: string): boolean => {
+  const validActivities = [
+    'communication-quiz', 
+    'object-quiz', 
+    'road-crossing', 
+    'coloring-activity',
+    'grocery-shopping'
+  ];
+  return validActivities.includes(activity);
+};
 
 export default router;

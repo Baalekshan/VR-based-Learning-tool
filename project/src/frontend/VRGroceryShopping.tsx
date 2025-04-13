@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product, products } from './data/products';
+import { submitScore } from '../utils/submitScore';
+import useAuth from '../utils/UseAuth';
 
 interface CartItem {
   id: number;
@@ -17,6 +19,16 @@ const VRGroceryShopping: React.FC = () => {
   const [showCart, setShowCart] = useState(true);
   const [cartTotal, setCartTotal] = useState(0);
   const [notification, setNotification] = useState<string | null>(null);
+  const [completedShopping, setCompletedShopping] = useState<boolean>(false);
+  const userEmail = useAuth();
+
+  // Load completed status from localStorage on mount
+  useEffect(() => {
+    const savedCompletedStatus = localStorage.getItem('groceryShoppingCompleted');
+    if (savedCompletedStatus === 'true') {
+      setCompletedShopping(true);
+    }
+  }, []);
 
   // Calculate cart total whenever cart items change
   useEffect(() => {
@@ -80,13 +92,40 @@ const VRGroceryShopping: React.FC = () => {
     navigate('/vr-grocery');
   };
 
+  const updateProgress = () => {
+    try {
+      // Mark as completed in localStorage
+      localStorage.setItem('groceryShoppingCompleted', 'true');
+      setCompletedShopping(true);
+      
+      // If user is logged in, submit score to server
+      if (userEmail) {
+        // Submit a score of 1 to indicate completion
+        submitScore('grocery-shopping', 1, userEmail)
+          .then(result => {
+            console.log('Grocery shopping progress saved:', result);
+          })
+          .catch(err => {
+            console.error('Failed to save grocery shopping progress:', err);
+          });
+      }
+      
+      console.log('Grocery shopping activity completed');
+    } catch (error) {
+      console.error('Error updating grocery shopping progress:', error);
+    }
+  };
+
   const handleCheckout = () => {
     if (cartItems.length === 0) {
       setNotification('Your cart is empty!');
       return;
     }
     
-    setNotification('Thank you for your purchase!');
+    // Update progress when checkout is successfully done
+    updateProgress();
+    
+    setNotification(`Thank you for your purchase! ${completedShopping ? '(Already completed)' : '(Marked as completed)'}`);
     setCartItems([]);
     setTimeout(() => {
       setNotification(null);
@@ -105,6 +144,11 @@ const VRGroceryShopping: React.FC = () => {
       <div className="vr-header">
         <h1>VR Grocery Shopping</h1>
         <div className="header-controls">
+          {completedShopping && (
+            <div className="completion-badge">
+              Completed ✓
+            </div>
+          )}
           <button className="cart-toggle" onClick={() => setShowCart(!showCart)}>
             {showCart ? 'Hide Cart' : 'Show Cart'} ({cartItems.length})
           </button>
@@ -741,6 +785,17 @@ const VRGroceryShopping: React.FC = () => {
             width: 95%;
             padding: 20px;
           }
+        }
+        
+        .completion-badge {
+          background-color: #4CAF50;
+          color: white;
+          padding: 5px 10px;
+          border-radius: 4px;
+          margin-right: 10px;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
         }
       `}</style>
     </div>
