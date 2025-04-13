@@ -10,9 +10,8 @@ dotenv.config();
 
 const router = Router();
 
-const BASE_URL = process.env.NODE_ENV == 'production'
-  ? 'https://vr-based-learning-tool.onrender.com'
-  : 'http://localhost:5000';
+// Using config for consistency
+const BASE_URL = config.apiBaseUrl.replace('/api', '');
 
 interface GoogleLoginUser {
   id: string;
@@ -26,9 +25,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: process.env.NODE_ENV === 'production'
-          ? 'https://vr-based-learning-tool.onrender.com/api/auth/google/callback'
-          : 'http://localhost:5000/api/auth/google/callback',
+        callbackURL: `${config.apiBaseUrl.replace('/api', '')}/api/auth/google/callback`,
       },
       async (accessToken, refreshToken, profile, done) => {
         console.log('Google Profile:', profile);
