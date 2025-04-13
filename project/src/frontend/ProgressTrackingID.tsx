@@ -25,7 +25,7 @@ const scoreMap: Record<string, number> = {
   "communication-quiz": 5,
   "object-quiz": 10,
   "road-crossing": 10,
-  "coloring-activity": 4  // Assuming 4 images in total
+  "coloring-activity": 4 
 };
 
 const ProgressTrackingID: React.FC = () => {

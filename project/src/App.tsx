@@ -17,6 +17,7 @@ import VRGroceryLanding from "./frontend/VRGroceryLanding";
 import logo from "./assets/Fun Beans Logo.png";
 import Store3D from "./frontend/Store3D";
 import VRGroceryShopping from "./frontend/VRGroceryShopping";
+import SolarSystem from "./frontend/SolarSystem";
 
 const isAuthenticated = () => {
   return !!localStorage.getItem("token");
@@ -58,6 +59,7 @@ function App() {
           <Route path="/vr-grocery" element={<VRGroceryLanding />} />
           <Route path="/shopping" element={<VRGroceryShopping />} />
           <Route path="/store-3d" element={<Store3D />} />
+          <Route path="/solar-system" element={<SolarSystem />} />
         </Routes>
       </div>
     </Router>
