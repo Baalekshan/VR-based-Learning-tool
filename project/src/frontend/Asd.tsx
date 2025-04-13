@@ -36,6 +36,13 @@ const Asd: React.FC = () => {
   const handleProfile = () => {
     navigate("/user-profile");
   }
+  const handleDrawColor = () => {
+    navigate("/coloring-activity");
+  }
+  const handleGroceryShopping = () => {
+    navigate("/vr-grocery");
+  }
+
 
   return (
     <div className="home-container">
@@ -65,6 +72,14 @@ const Asd: React.FC = () => {
           <img src={progressIcon} alt="Progress Tracking" />
           <span onClick={handleProgressTrackingAsd}>Progress Tracking</span>
         </div>
+        <div className="feature-card">
+          <img src={progressIcon} alt="Draw/Color" />
+          <span onClick={handleDrawColor}>Draw/Color</span>
+        </div>
+        <div className="feature-card">
+          <img src={progressIcon} alt="Grocery Shopping" />
+          <span onClick={handleGroceryShopping}>Grocery Shopping</span>
+        </div>
       </div>
 
       {/* VR Character & Skill Cards */}
@@ -92,7 +107,7 @@ const Asd: React.FC = () => {
           </div>
           <div className="skill-card">
             <img src={sensoryImg} alt="Sensory Regulation" />
-            <span>SENSORY REGULATION</span>
+            <span onClick={() => navigate("/solar-system")}>EXPLORE SOLAR SYSTEM</span>
           </div>
         </div>
       </div>
