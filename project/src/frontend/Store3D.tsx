@@ -1,7 +1,6 @@
 import React, { Suspense, useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, PerspectiveCamera, Html, OrbitControls } from '@react-three/drei';
-import { VRButton } from '@react-three/xr';
 import * as THREE from 'three';
 import { useNavigate } from 'react-router-dom';
 
