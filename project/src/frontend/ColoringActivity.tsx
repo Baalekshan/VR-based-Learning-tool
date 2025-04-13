@@ -1,6 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { submitScore } from '../utils/submitScore';
+import { config } from '../config';
+import useAuth from '../utils/UseAuth';
 
 interface ColorOption {
   name: string;
@@ -48,6 +51,9 @@ const coloringImages: ColoringImage[] = [
   }
 ];
 
+// Set for tracking visited images
+const totalImages = coloringImages.length;
+
 const ColoringActivity: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -58,43 +64,149 @@ const ColoringActivity: React.FC = () => {
   const [outlineImage, setOutlineImage] = useState<HTMLImageElement | null>(null);
   const [canvasStates, setCanvasStates] = useState<ImageData[]>([]);
   const [isFillMode, setIsFillMode] = useState(false);
-  const [canvasState, setCanvasState] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [visitedImages, setVisitedImages] = useState<Set<number>>(new Set());
   const navigate = useNavigate();
+  const userEmail = useAuth();
+
+  // Draw the outline image
+  const drawOutlineImage = useCallback((img: HTMLImageElement) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // Clear the canvas
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Calculate dimensions to fit the image in the center of the canvas
+    const canvasWidth = canvas.width / window.devicePixelRatio;
+    const canvasHeight = canvas.height / window.devicePixelRatio;
+    
+    // Calculate scaling to fit the image while maintaining aspect ratio
+    const scale = Math.min(
+      canvasWidth / img.width,
+      canvasHeight / img.height
+    ) * 0.8; // 80% of the canvas size
+    
+    const width = img.width * scale;
+    const height = img.height * scale;
+    
+    // Center the image
+    const x = (canvasWidth - width) / 2;
+    const y = (canvasHeight - height) / 2;
+    
+    // Draw the image
+    ctx.drawImage(img, x, y, width, height);
+  }, []);
+
+  // Update progress tracking when a new image is visited
+  useEffect(() => {
+    const updateProgress = () => {
+      try {
+        // Get the current image's ID
+        const currentImageId = coloringImages[currentImageIndex].id;
+        
+        // Check if this image has already been counted
+        if (!visitedImages.has(currentImageId)) {
+          // Add to visited images
+          const newVisitedImages = new Set(visitedImages);
+          newVisitedImages.add(currentImageId);
+          setVisitedImages(newVisitedImages);
+          
+          // Calculate progress percentage (each image contributes equally)
+          const progressPercentage = (newVisitedImages.size / totalImages) * 100;
+          
+          // Save visited images to localStorage so progress persists
+          localStorage.setItem('coloringVisitedImages', JSON.stringify(Array.from(newVisitedImages)));
+          
+          console.log(`Progress updated: ${progressPercentage}% (${newVisitedImages.size}/${totalImages} images)`);
+          
+          // Try to submit score if user is logged in, but don't block progress tracking if it fails
+          if (userEmail) {
+            submitScore('coloring-activity', newVisitedImages.size, userEmail)
+              .catch(err => console.error('Failed to submit score:', err));
+          }
+        }
+      } catch (error) {
+        console.error('Error updating progress:', error);
+      }
+    };
+    
+    updateProgress();
+  }, [currentImageIndex, visitedImages, userEmail]);
+
+  // Load saved progress from localStorage on component mount
+  useEffect(() => {
+    try {
+      const savedVisitedImages = localStorage.getItem('coloringVisitedImages');
+      if (savedVisitedImages) {
+        const parsedVisitedImages = JSON.parse(savedVisitedImages);
+        setVisitedImages(new Set(parsedVisitedImages));
+      }
+    } catch (error) {
+      console.error('Error loading saved progress:', error);
+    }
+  }, []);
 
   // Load the current outline image
   useEffect(() => {
-    const loadImages = () => {
+    let isMounted = true;
+    let loadingTimeout: ReturnType<typeof setTimeout>;
+    
+    const loadImages = async () => {
       try {
         setIsLoading(true);
         setError(null);
         const currentImage = coloringImages[currentImageIndex];
         console.log('Loading image:', currentImage.outlineSrc);
         
+        // Set a timeout to ensure isLoading doesn't get stuck
+        loadingTimeout = setTimeout(() => {
+          if (isMounted) {
+            setIsLoading(false);
+            console.log('Loading timed out, forcing ready state');
+          }
+        }, 3000);
+        
         const outlineImg = new Image();
         outlineImg.src = currentImage.outlineSrc;
         outlineImg.onload = () => {
+          if (!isMounted) return;
           console.log('Image loaded successfully');
           setOutlineImage(outlineImg);
           drawOutlineImage(outlineImg);
           setIsLoading(false);
+          clearTimeout(loadingTimeout);
         };
         outlineImg.onerror = (error) => {
+          if (!isMounted) return;
           console.error('Error loading image:', error);
           setError('Failed to load the coloring image. Please try refreshing the page.');
           setIsLoading(false);
+          clearTimeout(loadingTimeout);
         };
       } catch (error) {
+        if (!isMounted) return;
         console.error('Error in loadImages:', error);
         setError('An error occurred while loading the coloring activity.');
         setIsLoading(false);
+        clearTimeout(loadingTimeout);
       }
     };
     
     loadImages();
-  }, [currentImageIndex]);
+    
+    return () => {
+      isMounted = false;
+      clearTimeout(loadingTimeout);
+    };
+  }, [currentImageIndex, drawOutlineImage]);
 
+  // Canvas resize
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
@@ -140,57 +252,7 @@ const ColoringActivity: React.FC = () => {
     return () => {
       window.removeEventListener('resize', resizeCanvas);
     };
-  }, [outlineImage]);
-
-  useEffect(() => {
-    const loadSavedState = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      const savedState = localStorage.getItem('coloringState');
-      if (savedState) {
-        const imageData = new ImageData(new Uint8ClampedArray(JSON.parse(savedState)), canvas.width, canvas.height);
-        ctx.putImageData(imageData, 0, 0);
-      }
-    };
-
-    loadSavedState();
-  }, []);
-
-  const drawOutlineImage = (img: HTMLImageElement) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    
-    // Clear the canvas
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Calculate dimensions to fit the image in the center of the canvas
-    const canvasWidth = canvas.width / window.devicePixelRatio;
-    const canvasHeight = canvas.height / window.devicePixelRatio;
-    
-    // Calculate scaling to fit the image while maintaining aspect ratio
-    const scale = Math.min(
-      canvasWidth / img.width,
-      canvasHeight / img.height
-    ) * 0.8; // 80% of the canvas size
-    
-    const width = img.width * scale;
-    const height = img.height * scale;
-    
-    // Center the image
-    const x = (canvasWidth - width) / 2;
-    const y = (canvasHeight - height) / 2;
-    
-    // Draw the image
-    ctx.drawImage(img, x, y, width, height);
-  };
+  }, [outlineImage, drawOutlineImage]);
 
   const getCoordinates = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -272,7 +334,6 @@ const ColoringActivity: React.FC = () => {
 
   const stopDrawing = () => {
     setIsDrawing(false);
-    saveProgressToMongoDB(canvasState);
   };
 
   const clearCanvas = () => {
@@ -355,7 +416,7 @@ const ColoringActivity: React.FC = () => {
 
   const hexToRgb = (hex: string) => {
     const bigint = parseInt(hex.slice(1), 16);
-    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255, 255];
   };
 
   const handleFill = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -372,44 +433,6 @@ const ColoringActivity: React.FC = () => {
   const toggleMode = () => {
     setIsFillMode(!isFillMode);
   };
-
-  const saveStateToLocalStorage = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    localStorage.setItem('coloringState', JSON.stringify(Array.from(imageData.data)));
-  };
-
-  // Function to save progress to MongoDB
-  const saveProgressToMongoDB = async (canvasState: string) => {
-    try {
-      await axios.post('/api/save-progress', { imageId: 'current-image-id', canvasState });
-    } catch (error) {
-      console.error('Error saving progress to MongoDB:', error);
-    }
-  };
-
-  // Function to load progress from MongoDB
-  const loadProgressFromMongoDB = async () => {
-    try {
-      const response = await axios.get('/api/get-progress', { params: { imageId: 'current-image-id' } });
-      const { progress } = response.data as { progress: { canvasState: string } };
-      if (progress) {
-        setCanvasState(progress.canvasState);
-      }
-    } catch (error) {
-      console.error('Error loading progress from MongoDB:', error);
-    }
-  };
-
-  // Load progress when component mounts
-  useEffect(() => {
-    loadProgressFromMongoDB();
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">

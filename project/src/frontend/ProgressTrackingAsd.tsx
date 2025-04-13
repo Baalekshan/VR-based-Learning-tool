@@ -11,18 +11,21 @@ const colorMapping: { [key: string]: string } = {
   "communication-quiz": "bg-success",
   "object-quiz": "bg-warning",
   "road-crossing": "bg-danger",
+  "coloring-activity": "bg-info",
 };
 
 const activityMap: Record<string, string> = {
   "communication-quiz": "Communication Quiz",
   "object-quiz": "Object Quiz",
-  "road-crossing": "Road Crossing"
+  "road-crossing": "Road Crossing",
+  "coloring-activity": "Coloring Activity"
 };
 
 const maxScores: { [key: string]: number } = {
   "communication-quiz": 5,
   "object-quiz": 10,
   "road-crossing": 10,
+  "coloring-activity": 4, // Assuming 4 images in total
 };
 
 const ProgressTrackingAsd: React.FC = () => {

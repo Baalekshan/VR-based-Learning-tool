@@ -13,7 +13,7 @@ router.post("/submit-score", authenticateUser, async (req: Request, res: Respons
       return res.status(400).json({ message: "Activity type, score, and email are required." });
     }
 
-    if (!["communication-quiz", "object-quiz", "road-crossing"].includes(activity)) {
+    if (!["communication-quiz", "object-quiz", "road-crossing", "coloring-activity"].includes(activity)) {
       return res.status(400).json({ message: "Invalid activity type." });
     }
 

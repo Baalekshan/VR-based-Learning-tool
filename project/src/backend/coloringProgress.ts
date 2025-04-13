@@ -14,14 +14,19 @@ router.post("/save-progress", authenticateUser, async (req: Request, res: Respon
       return res.status(400).json({ message: "Image ID and canvas state are required." });
     }
 
-    const progress = new ColoringProgress({
-      userId,
-      imageId,
-      canvasState,
-    });
+    // Use findOneAndUpdate with upsert to either update existing or create new
+    const result = await ColoringProgress.findOneAndUpdate(
+      { userId, imageId },
+      { 
+        userId,
+        imageId,
+        canvasState,
+        updatedAt: new Date()
+      },
+      { upsert: true, new: true }
+    );
 
-    await progress.save();
-    res.status(201).json({ message: "Progress saved successfully." });
+    res.status(200).json({ message: "Progress saved successfully.", progress: result });
   } catch (error) {
     console.error("Error saving progress:", error);
     res.status(500).json({ message: "Internal server error." });

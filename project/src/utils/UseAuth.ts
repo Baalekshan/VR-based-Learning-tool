@@ -5,6 +5,8 @@ interface User {
   email: string;
 }
 
+
+
 const useAuth = (): string | null => {
   const [user, setUser] = useState<User | null>(null);
 

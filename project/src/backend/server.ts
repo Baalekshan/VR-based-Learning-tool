@@ -75,7 +75,8 @@ app.use(passport.session());
 app.use(trackUserSession);
 
 app.use(cookieParser());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve static files
 const frontendPath = path.join(__dirname, 'client');
