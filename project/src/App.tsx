@@ -13,7 +13,10 @@ import ObjectQuiz from "./frontend/ObjectQuiz";
 import ColoringActivity from "./frontend/ColoringActivity";
 // @ts-ignore
 import TrafficScene from "./frontend/RoadCross";
+import VRGroceryLanding from "./frontend/VRGroceryLanding";
 import logo from "./assets/Fun Beans Logo.png";
+import Store3D from "./frontend/Store3D";
+import VRGroceryShopping from "./frontend/VRGroceryShopping";
 
 const isAuthenticated = () => {
   return !!localStorage.getItem("token");
@@ -50,8 +53,11 @@ function App() {
           <Route path="/user-profile" element={<PrivateRoute element={<ProfilePage />} />} />
           <Route path="/communication-quiz" element={<PrivateRoute element={<CommunicationQuiz />} />} />
           <Route path="/object-quiz" element={<PrivateRoute element={<ObjectQuiz />} />} />
-          <Route path="/road-crossing" element={<PrivateRoute element={<TrafficScene />} />} />
-          <Route path="/coloring-activity" element={<PrivateRoute element={<ColoringActivity />} />} />
+          <Route path="/road-crossing"  element={<TrafficScene />} />
+          <Route path="/coloring-activity" element={<ColoringActivity />} />
+          <Route path="/vr-grocery" element={<VRGroceryLanding />} />
+          <Route path="/shopping" element={<VRGroceryShopping />} />
+          <Route path="/store-3d" element={<Store3D />} />
         </Routes>
       </div>
     </Router>
