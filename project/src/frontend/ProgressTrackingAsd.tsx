@@ -12,7 +12,9 @@ const colorMapping: { [key: string]: string } = {
   "object-quiz": "bg-warning",
   "road-crossing": "bg-danger",
   "coloring-activity": "bg-info",
-  "grocery-shopping": "bg-primary"
+  "grocery-shopping": "bg-primary",
+  "solar-system": "bg-secondary",
+  "store-3d": "bg-dark"
 };
 
 const activityMap: Record<string, string> = {
@@ -20,7 +22,9 @@ const activityMap: Record<string, string> = {
   "object-quiz": "Object Quiz",
   "road-crossing": "Road Crossing",
   "coloring-activity": "Coloring Activity",
-  "grocery-shopping": "Grocery Shopping"
+  "grocery-shopping": "Grocery Shopping",
+  "solar-system": "Solar System",
+  "store-3d": "3D Store"
 };
 
 const maxScores: { [key: string]: number } = {
@@ -28,7 +32,9 @@ const maxScores: { [key: string]: number } = {
   "object-quiz": 10,
   "road-crossing": 10,
   "coloring-activity": 4,
-  "grocery-shopping": 1
+  "grocery-shopping": 1,
+  "solar-system": 5,
+  "store-3d": 5
 };
 
 const ProgressTrackingAsd: React.FC = () => {
@@ -74,6 +80,12 @@ const ProgressTrackingAsd: React.FC = () => {
     setShowPastScores(false);
   };
 
+  const handleActivityClick = (activity: string) => {
+    if (activity === "grocery-shopping") {
+      navigate("/vrgrocerylanding");
+    }
+  };
+
   return (
     <div className="progress-container">
       <img src={bgImage} alt="Background" className="background-image" />
@@ -99,7 +111,12 @@ const ProgressTrackingAsd: React.FC = () => {
                   {Object.entries(scores).map(([activity, score]) => {
                     const percentage = (score / maxScores[activity]) * 100;
                     return (
-                      <div key={activity} className="progress-item">
+                      <div 
+                        key={activity} 
+                        className="progress-item"
+                        onClick={() => handleActivityClick(activity)}
+                        style={{ cursor: activity === "grocery-shopping" ? "pointer" : "default" }}
+                      >
                         <label><h3>{activityMap[activity]}</h3></label>
                         <div className="progress" style={{ height: "20px", width: "200px", margin: "0 auto" }}>
                           <div
@@ -130,7 +147,12 @@ const ProgressTrackingAsd: React.FC = () => {
                       {Object.entries(pastScore.score).map(([activity, score]) => {
                         const percentage = (score / maxScores[activity]) * 100;
                         return (
-                          <div key={activity} className="progress-item">
+                          <div 
+                            key={activity} 
+                            className="progress-item"
+                            onClick={() => handleActivityClick(activity)}
+                            style={{ cursor: activity === "grocery-shopping" ? "pointer" : "default" }}
+                          >
                             <label><h3>{activityMap[activity]}</h3></label>
                             <div className="progress" style={{ height: "20px", width: "200px", margin: "0 auto" }}>
                               <div
