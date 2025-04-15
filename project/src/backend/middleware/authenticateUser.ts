@@ -9,7 +9,11 @@ export interface AuthRequest extends Request {
 }
 
 const authenticateUser = (req: Request, res: Response, next: NextFunction): void => {
-  const token = req.cookies?.token; 
+  // Check for token in Authorization header
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.startsWith('Bearer ') 
+    ? authHeader.split(' ')[1] 
+    : req.cookies?.token;
 
   if (!token) {
     res.status(401).json({ message: "Unauthorized: No token provided" });

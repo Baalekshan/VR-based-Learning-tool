@@ -16,6 +16,19 @@ const VRScene: React.FC = () => {
     localStorage.setItem(userProgressKey, 'true');
     console.log('Solar system activity completed');
 
+    // Submit score to backend
+    if (userEmail) {
+      submitScore('solar-system', 1, userEmail)
+        .then((result) => {
+          console.log('Solar system progress saved:', result);
+        })
+        .catch((err) => {
+          console.error('Failed to save solar system progress:', err);
+          // If the backend save fails, remove the localStorage entry
+          localStorage.removeItem(userProgressKey);
+        });
+    }
+
     // Add keyboard controls
     const handleKeyDown = (e: KeyboardEvent) => {
       const camera = document.querySelector('a-camera');
