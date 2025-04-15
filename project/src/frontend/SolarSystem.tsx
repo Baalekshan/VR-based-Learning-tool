@@ -170,6 +170,7 @@ const VRScene: React.FC = () => {
         <a-entity environment="preset: default;"></a-entity>
         <a-entity oculus-touch-controls="hand: left"></a-entity>
         <a-entity oculus-touch-controls="hand: right"></a-entity>
+      </a-scene>
 
       {/* Controls Overlay */}
       <div style={{
