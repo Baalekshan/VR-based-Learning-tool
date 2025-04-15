@@ -9,7 +9,7 @@ const VRGroceryLanding: React.FC = () => {
   };
 
   const handleBackToHome = () => {
-    navigate('/');
+    navigate('/asdpage')
   };
 
   return (
