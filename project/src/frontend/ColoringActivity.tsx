@@ -117,15 +117,7 @@ const ColoringActivity: React.FC = () => {
           newVisitedImages.add(currentImageId);
           setVisitedImages(newVisitedImages);
           
-          // Calculate progress percentage (each image contributes equally)
-          const progressPercentage = (newVisitedImages.size / totalImages) * 100;
-          
-          // Save visited images to localStorage so progress persists
-          localStorage.setItem('coloringVisitedImages', JSON.stringify(Array.from(newVisitedImages)));
-          
-          console.log(`Progress updated: ${progressPercentage}% (${newVisitedImages.size}/${totalImages} images)`);
-          
-          // Try to submit score if user is logged in, but don't block progress tracking if it fails
+          // If user is logged in, submit score to server
           if (userEmail) {
             submitScore('coloring-activity', newVisitedImages.size, userEmail)
               .catch(err => console.error('Failed to submit score:', err));
@@ -138,19 +130,6 @@ const ColoringActivity: React.FC = () => {
     
     updateProgress();
   }, [currentImageIndex, visitedImages, userEmail]);
-
-  // Load saved progress from localStorage on component mount
-  useEffect(() => {
-    try {
-      const savedVisitedImages = localStorage.getItem('coloringVisitedImages');
-      if (savedVisitedImages) {
-        const parsedVisitedImages = JSON.parse(savedVisitedImages);
-        setVisitedImages(new Set(parsedVisitedImages));
-      }
-    } catch (error) {
-      console.error('Error loading saved progress:', error);
-    }
-  }, []);
 
   // Load the current outline image
   useEffect(() => {
