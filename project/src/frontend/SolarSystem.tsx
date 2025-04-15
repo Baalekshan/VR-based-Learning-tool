@@ -7,6 +7,8 @@ const VRScene: React.FC = () => {
   const sceneRef = useRef(null);
   const [completedSolarSystem, setCompletedSolarSystem] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
+  const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
+  const [isMoving, setIsMoving] = useState(false);
   const userEmail = useAuth();
 
   useEffect(() => {
@@ -32,32 +34,48 @@ const VRScene: React.FC = () => {
       const pos = camera.getAttribute('position');
       const rot = camera.getAttribute('rotation');
 
-      switch (e.key) {
-        case 'ArrowUp':
+      setIsMoving(true);
+
+      switch (e.key.toLowerCase()) {
+        case 'w':
           camera.setAttribute('position', {
-            x: pos.x,
+            x: pos.x - Math.sin(rot.y * Math.PI / 180) * moveSpeed,
             y: pos.y,
-            z: pos.z - moveSpeed
+            z: pos.z - Math.cos(rot.y * Math.PI / 180) * moveSpeed
           });
           break;
-        case 'ArrowDown':
+        case 's':
           camera.setAttribute('position', {
-            x: pos.x,
+            x: pos.x + Math.sin(rot.y * Math.PI / 180) * moveSpeed,
             y: pos.y,
-            z: pos.z + moveSpeed
+            z: pos.z + Math.cos(rot.y * Math.PI / 180) * moveSpeed
           });
           break;
-        case 'ArrowLeft':
+        case 'a':
           camera.setAttribute('position', {
-            x: pos.x - moveSpeed,
+            x: pos.x - Math.cos(rot.y * Math.PI / 180) * moveSpeed,
             y: pos.y,
+            z: pos.z + Math.sin(rot.y * Math.PI / 180) * moveSpeed
+          });
+          break;
+        case 'd':
+          camera.setAttribute('position', {
+            x: pos.x + Math.cos(rot.y * Math.PI / 180) * moveSpeed,
+            y: pos.y,
+            z: pos.z - Math.sin(rot.y * Math.PI / 180) * moveSpeed
+          });
+          break;
+        case ' ':
+          camera.setAttribute('position', {
+            x: pos.x,
+            y: pos.y + moveSpeed,
             z: pos.z
           });
           break;
-        case 'ArrowRight':
+        case 'shift':
           camera.setAttribute('position', {
-            x: pos.x + moveSpeed,
-            y: pos.y,
+            x: pos.x,
+            y: pos.y - moveSpeed,
             z: pos.z
           });
           break;
@@ -78,21 +96,32 @@ const VRScene: React.FC = () => {
       }
     };
 
-    // Update position display
+    const handleKeyUp = () => {
+      setIsMoving(false);
+    };
+
+    // Update position and rotation display
     const updatePosition = () => {
       const camera = document.querySelector('a-camera');
       if (camera) {
         const pos = camera.getAttribute('position');
+        const rot = camera.getAttribute('rotation');
         setPosition({
           x: Number(pos.x.toFixed(2)),
           y: Number(pos.y.toFixed(2)),
           z: Number(pos.z.toFixed(2))
+        });
+        setRotation({
+          x: Number(rot.x.toFixed(2)),
+          y: Number(rot.y.toFixed(2)),
+          z: Number(rot.z.toFixed(2))
         });
       }
       requestAnimationFrame(updatePosition);
     };
 
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
     updatePosition();
 
     return () => {
@@ -100,6 +129,7 @@ const VRScene: React.FC = () => {
         model.removeEventListener('model-loaded', handleModelLoaded);
       }
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
 
@@ -133,16 +163,24 @@ const VRScene: React.FC = () => {
         ref={sceneRef}
         embedded
         vr-mode-ui="enabled: true"
-        renderer="antialias: true"
-        background="color: black"
+        renderer="antialias: true; colorManagement: true; physicallyCorrectLights: true"
+        background="color: #000000"
         loading-screen="enabled: true"
       >
-        {/* Camera with movement controls */}
+        {/* Skybox with space background */}
+        <a-sky 
+          src="https://cdn.glitch.global/f4b2afd1-d1e5-4ad0-8681-623d1235f0cb/space.jpg?v=1689324492405"
+          radius="5000"
+          segments-height="64"
+          segments-width="64"
+        ></a-sky>
+
+        {/* Camera with enhanced movement controls */}
         <a-entity position="0 1.6 10">
           <a-camera 
-            wasd-controls="enabled: true"
-            look-controls="enabled: true"
-            movement-controls="speed: 0.5"
+            wasd-controls="enabled: true; acceleration: 50; fly: true"
+            look-controls="enabled: true; pointerLockEnabled: true"
+            movement-controls="speed: 0.5; fly: true"
           >
             <a-entity
               cursor="fuse: false"
@@ -172,7 +210,7 @@ const VRScene: React.FC = () => {
         <a-entity oculus-touch-controls="hand: right"></a-entity>
       </a-scene>
 
-      {/* Controls Overlay */}
+      {/* Enhanced Controls Overlay */}
       <div style={{
         position: 'absolute',
         bottom: '20px',
@@ -189,10 +227,18 @@ const VRScene: React.FC = () => {
         <div style={{ marginBottom: '10px' }}>
           <h4 style={{ margin: '0 0 5px 0' }}>Keyboard Controls:</h4>
           <ul style={{ margin: '0', paddingLeft: '20px' }}>
-            <li>↑/↓: Move forward/backward</li>
-            <li>←/→: Move left/right</li>
+            <li>W/S: Move forward/backward</li>
+            <li>A/D: Move left/right</li>
+            <li>Space/Shift: Move up/down</li>
             <li>Q/E: Turn left/right</li>
+            <li>Mouse: Look around</li>
           </ul>
+        </div>
+        <div style={{ marginBottom: '10px' }}>
+          <h4 style={{ margin: '0 0 5px 0' }}>Position:</h4>
+          <p style={{ margin: '0' }}>X: {position.x} Y: {position.y} Z: {position.z}</p>
+          <p style={{ margin: '0' }}>Rotation: {rotation.y}°</p>
+          <p style={{ margin: '0' }}>Status: {isMoving ? 'Moving' : 'Stationary'}</p>
         </div>
         <div style={{ marginBottom: '10px' }}>
           <h4 style={{ margin: '0 0 5px 0' }}>VR Controls:</h4>
