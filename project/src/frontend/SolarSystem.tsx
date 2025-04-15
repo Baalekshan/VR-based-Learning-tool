@@ -171,13 +171,6 @@ const VRScene: React.FC = () => {
         <a-entity oculus-touch-controls="hand: left"></a-entity>
         <a-entity oculus-touch-controls="hand: right"></a-entity>
 
-        {/* Position Display */}
-        <a-entity
-          position="0 2 -2"
-          text="value: Position X: 0.00 Y: 0.00 Z: 0.00; color: white; align: center; width: 4"
-        ></a-entity>
-      </a-scene>
-
       {/* Controls Overlay */}
       <div style={{
         position: 'absolute',
