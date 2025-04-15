@@ -5,6 +5,7 @@ import defaultAvatar from "../assets/boyProfile.jpg";
 import avatar1 from "../assets/boyProfile.jpg";
 import avatar2 from "../assets/girlProfile.jpg";
 import axios from "axios";
+import { config } from "./config";
 
 
 const ProfilePage: React.FC = () => {
@@ -47,7 +48,7 @@ const ProfilePage: React.FC = () => {
   
     try {
       const response = await axios.post<{ message: string }>(
-        "https://vr-based-learning-tool.onrender.com/api/profile",
+        `${config.apiBaseUrl}/profile`,
         formData,
         {
           headers: {

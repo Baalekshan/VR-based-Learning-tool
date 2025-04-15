@@ -10,10 +10,8 @@ dotenv.config();
 
 const router = Router();
 
-// Using config for consistency
-const BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://vr-based-learning-tool.onrender.com'
-  : 'http://localhost:5000';
+// Using centralized config
+const BASE_URL = config.clientBaseUrl;
 
 interface GoogleLoginUser {
   id: string;
