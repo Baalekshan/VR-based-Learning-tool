@@ -1,10 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import bgImage from "../assets/loginBg.jpg";
 import avatarImage from "../assets/vr-avatar.png";
 import axios from "axios";
 import LazyImage from "../components/LazyImage";
 import "../styles/LazyImage.css";
+import { config } from './config';
 
 interface LoginResponse {
   message: string;
@@ -28,8 +29,8 @@ function Login() {
     navigate("/selectionpage");
   };
 
-  const handleGoogleAuth = () => {
-    window.location.assign("https://vr-based-learning-tool.onrender.com/api/auth/google");
+  const handleGoogleLogin = () => {
+    window.location.assign(`${config.apiBaseUrl}/auth/google`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,11 +38,10 @@ function Login() {
     console.log("Form submitted:", formData);
 
     try {
-      const response = await axios.post(
-        "https://vr-based-learning-tool.onrender.com/api/login",
-        formData,
-        { withCredentials: true }
-      );
+      const response = await axios.post(`${config.apiBaseUrl}/login`, {
+        email: formData.email,
+        password: formData.password,
+      });
 
       const data = response.data as LoginResponse;
 
@@ -124,7 +124,7 @@ function Login() {
                 src="https://www.google.com/favicon.ico"
                 alt="Google"
                 className="icon"
-                onClick={handleGoogleAuth}
+                onClick={handleGoogleLogin}
               />
               Google
             </button>

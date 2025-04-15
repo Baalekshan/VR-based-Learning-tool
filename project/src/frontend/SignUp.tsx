@@ -1,10 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import bgImage from "../assets/loginBg.jpg";
 import avatarImage from "../assets/vr-avatar.png";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { config } from './config';
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -23,10 +24,12 @@ function SignUp() {
     e.preventDefault();
     console.log("Submitting form data:", formData);
     try {
-      const response = await axios.post(
-        "https://vr-based-learning-tool.onrender.com/api/signup",
-        formData
-      );
+      const response = await axios.post(`${config.apiBaseUrl}/signup`, {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+      });
 
       if (response.status === 201) {
         toast.success("Account created successfully!", {
@@ -56,7 +59,7 @@ function SignUp() {
   };
   
   const handleGoogleAuth = () => {
-    window.location.assign("https://vr-based-learning-tool.onrender.com/api/auth/google");
+    window.location.assign(`${config.apiBaseUrl}/auth/google`);
   };
   
 
