@@ -8,7 +8,7 @@ interface SubmitScoreResponse {
 }
 
 export const submitScore = async (
-  activity: "communication-quiz" | "object-quiz" | "road-crossing" | "coloring-activity" | "grocery-shopping",
+  activity: "communication-quiz" | "object-quiz" | "road-crossing" | "coloring-activity" | "grocery-shopping" | "solar-system",
   score: number,
   email: string
 ): Promise<SubmitScoreResponse | null> => {

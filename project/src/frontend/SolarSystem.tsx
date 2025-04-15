@@ -5,24 +5,16 @@ import useAuth from '../utils/UseAuth';
 
 const VRScene: React.FC = () => {
   const sceneRef = useRef(null);
-  const [completedSolarSystem, setCompletedSolarSystem] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
   const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
   const [isMoving, setIsMoving] = useState(false);
   const userEmail = useAuth();
 
   useEffect(() => {
-    // Once the scene is loaded and model is complete, trigger progress update
-    const handleModelLoaded = () => {
-      setTimeout(() => {
-        setCompletedSolarSystem(true);
-      }, 10000);
-    };
-
-    const model = document.querySelector('#solarSystemModel');
-    if (model) {
-      model.addEventListener('model-loaded', handleModelLoaded);
-    }
+    // Update progress immediately when component mounts
+    const userProgressKey = `solarSystemCompleted_${userEmail}`;
+    localStorage.setItem(userProgressKey, 'true');
+    console.log('Solar system activity completed');
 
     // Add keyboard controls
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -125,9 +117,6 @@ const VRScene: React.FC = () => {
     updatePosition();
 
     return () => {
-      if (model) {
-        model.removeEventListener('model-loaded', handleModelLoaded);
-      }
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
@@ -135,27 +124,35 @@ const VRScene: React.FC = () => {
 
   const updateProgress = () => {
     try {
-      localStorage.setItem('solarSystemCompleted', 'true');
-      if (userEmail) {
-        submitScore('solar-system', 1, userEmail)
-          .then((result) => {
-            console.log('Solar system progress saved:', result);
-          })
-          .catch((err) => {
-            console.error('Failed to save solar system progress:', err);
-          });
+      // Check if the activity was already completed for this user
+      const userProgressKey = `solarSystemCompleted_${userEmail}`;
+      const isAlreadyCompleted = localStorage.getItem(userProgressKey) === 'true';
+      
+      if (!isAlreadyCompleted) {
+        localStorage.setItem(userProgressKey, 'true');
+        if (userEmail) {
+          submitScore('solar-system', 1, userEmail)
+            .then((result) => {
+              console.log('Solar system progress saved:', result);
+            })
+            .catch((err) => {
+              console.error('Failed to save solar system progress:', err);
+              // If the backend save fails, remove the localStorage entry
+              localStorage.removeItem(userProgressKey);
+            });
+        }
+        console.log('Solar system activity completed');
       }
-      console.log('Solar system activity completed');
     } catch (error) {
       console.error('Error updating solar system progress:', error);
     }
   };
 
   useEffect(() => {
-    if (completedSolarSystem) {
+    if (localStorage.getItem(`solarSystemCompleted_${userEmail}`) === 'true') {
       updateProgress();
     }
-  }, [completedSolarSystem]);
+  }, [userEmail]);
 
   return (
     <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', backgroundColor: 'black' }}>

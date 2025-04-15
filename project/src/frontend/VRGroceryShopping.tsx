@@ -24,11 +24,12 @@ const VRGroceryShopping: React.FC = () => {
 
   // Load completed status from localStorage on mount
   useEffect(() => {
-    const savedCompletedStatus = localStorage.getItem('groceryShoppingCompleted');
+    const userProgressKey = `groceryShoppingCompleted_${userEmail}`;
+    const savedCompletedStatus = localStorage.getItem(userProgressKey);
     if (savedCompletedStatus === 'true') {
       setCompletedShopping(true);
     }
-  }, []);
+  }, [userEmail]);
 
   // Calculate cart total whenever cart items change
   useEffect(() => {
@@ -94,23 +95,31 @@ const VRGroceryShopping: React.FC = () => {
 
   const updateProgress = () => {
     try {
-      // Mark as completed in localStorage
-      localStorage.setItem('groceryShoppingCompleted', 'true');
-      setCompletedShopping(true);
+      const userProgressKey = `groceryShoppingCompleted_${userEmail}`;
+      const isAlreadyCompleted = localStorage.getItem(userProgressKey) === 'true';
       
-      // If user is logged in, submit score to server
-      if (userEmail) {
-        // Submit a score of 1 to indicate completion
-        submitScore('grocery-shopping', 1, userEmail)
-          .then(result => {
-            console.log('Grocery shopping progress saved:', result);
-          })
-          .catch(err => {
-            console.error('Failed to save grocery shopping progress:', err);
-          });
+      if (!isAlreadyCompleted) {
+        // Mark as completed in localStorage
+        localStorage.setItem(userProgressKey, 'true');
+        setCompletedShopping(true);
+        
+        // If user is logged in, submit score to server
+        if (userEmail) {
+          // Submit a score of 1 to indicate completion
+          submitScore('grocery-shopping', 1, userEmail)
+            .then(result => {
+              console.log('Grocery shopping progress saved:', result);
+            })
+            .catch(err => {
+              console.error('Failed to save grocery shopping progress:', err);
+              // If the backend save fails, remove the localStorage entry
+              localStorage.removeItem(userProgressKey);
+              setCompletedShopping(false);
+            });
+        }
+        
+        console.log('Grocery shopping activity completed');
       }
-      
-      console.log('Grocery shopping activity completed');
     } catch (error) {
       console.error('Error updating grocery shopping progress:', error);
     }
