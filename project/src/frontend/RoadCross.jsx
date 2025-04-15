@@ -5,6 +5,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAuth from '../utils/UseAuth';
 import { submitScore } from '../utils/submitScore';
+import { fetchProfile } from '../utils/fetchProfile';
+import { useNavigate } from 'react-router-dom';
 
 const TrafficScene = () => {
   const redLightRef = useRef(null);
@@ -16,10 +18,23 @@ const TrafficScene = () => {
   const hasCrossedRef = useRef(false);
   const hasStartedCrossingRef = useRef(false);
   const email = useAuth();
+  const navigate = useNavigate();
   console.log(email);
 
-  const handleHome = () => {
-    window.location.href = '/asdpage';
+  const handleHome = async () => {
+    try {
+      const profile = await fetchProfile();
+      if (profile?.disorderType === 'ASD') {
+        navigate('/asdpage');
+      } else if (profile?.disorderType === 'ID') {
+        navigate('/idpage');
+      } else {
+        navigate('/selectionpage');
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      navigate('/selectionpage');
+    }
   };
   const enterVR = () => {
     const scene = document.querySelector('a-scene');

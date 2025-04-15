@@ -6,7 +6,7 @@ import avatar1 from "../assets/boyProfile.jpg";
 import avatar2 from "../assets/girlProfile.jpg";
 import axios from "axios";
 import { config } from "./config";
-
+import { fetchProfile } from "../utils/fetchProfile";
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,7 +27,23 @@ const ProfilePage: React.FC = () => {
     });
   };
   
-  
+  const handleHome = async () => {
+    try {
+      const profile = await fetchProfile();
+      if (profile?.disorder === "ASD") {
+        navigate('/asdpage');
+      } else if (profile?.disorder === "ID") {
+        navigate('/idpage');
+      } else {
+        // Default to selection page if disorder type is not set
+        navigate('/selectionpage');
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      // Default to selection page if there's an error
+      navigate('/selectionpage');
+    }
+  };
 
   const handleAvatarSelect = (avatar: string) => {
     setFormData({ ...formData, avatar });
@@ -116,7 +132,7 @@ const ProfilePage: React.FC = () => {
           <div className="button-group">
             <button type="submit" className="submit-btn">SUBMIT</button>
             <button type="button" className="edit-btn">EDIT</button>
-            <button type="button" className="home-btn" onClick={() => navigate("/asdpage")}>HOME</button>
+            <button type="button" className="home-btn" onClick={handleHome}>HOME</button>
           </div>
 
           

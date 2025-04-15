@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fetchProfile } from '../utils/fetchProfile';
 
 const VRGroceryLanding: React.FC = () => {
   const navigate = useNavigate();
@@ -8,8 +9,22 @@ const VRGroceryLanding: React.FC = () => {
     navigate('/store-3d');
   };
 
-  const handleBackToHome = () => {
-    navigate('/asdpage')
+  const handleBackToHome = async () => {
+    try {
+      const profile = await fetchProfile();
+      if (profile?.disorder === "ASD") {
+        navigate('/asdpage');
+      } else if (profile?.disorder === "ID") {
+        navigate('/idpage');
+      } else {
+        // Default to selection page if disorder type is not set
+        navigate('/selectionpage');
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      // Default to selection page if there's an error
+      navigate('/selectionpage');
+    }
   };
 
   return (
