@@ -6,6 +6,7 @@ import axios from "axios";
 import LazyImage from "../components/LazyImage";
 import "../styles/LazyImage.css";
 import { config } from './config';
+import { fetchProfile } from '../utils/fetchProfile';
 
 interface LoginResponse {
   message: string;
@@ -49,8 +50,22 @@ function Login() {
 
       if (data.token) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("email", data.user.email);
         console.log("Login successful!");
-        handleSelectionPage();
+
+        // Check if user has a profile
+        const profile = await fetchProfile();
+        if (profile?.disorder) {
+          // User has a profile, redirect to appropriate page
+          if (profile.disorder === "ASD") {
+            navigate("/asdpage");
+          } else if (profile.disorder === "ID") {
+            navigate("/idpage");
+          }
+        } else {
+          // No profile yet, go to selection page
+          navigate("/selectionpage");
+        }
       } else {
         console.error("Login failed:", data.message || "Unknown error");
       }

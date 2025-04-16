@@ -12,7 +12,10 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 router.use(cookieParser());
 
 router.get('/current-user', async (req: Request, res: Response): Promise<any> => {
-    const token = req.cookies.token;
+    // Get token from Authorization header
+    const authHeader = req.headers.authorization;
+    const token = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+    
     if (!token) {
       return res.status(401).json({ error: 'Not authenticated' });
     }
@@ -24,7 +27,13 @@ router.get('/current-user', async (req: Request, res: Response): Promise<any> =>
         return res.status(401).json({ error: 'User not found' });
       }
   
-      res.status(200).json({ email: user.email });
+      res.status(200).json({
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userId: user._id,
+        authMethod: user.authMethod
+      });
     } catch (error) {
       res.status(401).json({ error: 'Invalid token' });
     }

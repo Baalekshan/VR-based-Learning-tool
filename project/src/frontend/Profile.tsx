@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import bgImage from "../assets/profileBg.jpg";
 import defaultAvatar from "../assets/boyProfile.jpg";
@@ -17,8 +17,31 @@ const ProfilePage: React.FC = () => {
     disorder: "",
     mobile: "",
     email: "",
-    avatar: defaultAvatar, // Default avatar
+    avatar: defaultAvatar,
   });
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const profile = await fetchProfile();
+        if (profile) {
+          setFormData(prev => ({
+            ...prev,
+            name: profile.name || "",
+            age: String(profile.age || ""),
+            gender: profile.gender || "",
+            disorder: profile.disorder || "",
+            mobile: profile.mobile || "",
+            email: profile.email || "",
+            avatar: profile.avatar || defaultAvatar,
+          }));
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+      }
+    };
+    loadProfile();
+  }, []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
@@ -35,12 +58,10 @@ const ProfilePage: React.FC = () => {
       } else if (profile?.disorder === "ID") {
         navigate('/idpage');
       } else {
-        // Default to selection page if disorder type is not set
         navigate('/selectionpage');
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
-      // Default to selection page if there's an error
       navigate('/selectionpage');
     }
   };
@@ -52,20 +73,18 @@ const ProfilePage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
   
-    // Get the token from localStorage or cookies
     const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
   
-    if (!token) {
-      console.error("Token not found");
+    if (!token || !email) {
+      console.error("Token or email not found");
       return;
     }
-  
-    console.log("Token: ", token);
   
     try {
       const response = await axios.post<{ message: string }>(
         `${config.apiBaseUrl}/profile`,
-        formData,
+        { ...formData, email },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -73,6 +92,12 @@ const ProfilePage: React.FC = () => {
           withCredentials: true,
         }
       );
+      
+      localStorage.setItem('profile', JSON.stringify({
+        name: formData.name,
+        disorder: formData.disorder,
+        email: email
+      }));
       
       if (formData.disorder === "ASD") {
         navigate("/asdpage");
@@ -86,16 +111,16 @@ const ProfilePage: React.FC = () => {
     }
   };
   
-  
   return (
     <div className="profile-container">
-      {/* Background Image */}
       <img src={bgImage} alt="Background" className="background-image" />
 
-      {/* Profile Form */}
       <div className="form-container">
-        {/* Profile Avatar */}
-        <img src={formData.avatar} alt="Profile Avatar" className="profile-avatar" />
+        <img 
+          src={formData.avatar || defaultAvatar} 
+          alt="Profile Avatar" 
+          className="profile-avatar" 
+        />
 
         <h2>PROFILE</h2>
 
@@ -104,42 +129,34 @@ const ProfilePage: React.FC = () => {
           <div className="row">
             <input type="text" name="age" placeholder="Age" value={formData.age} onChange={handleInputChange} />
             <select name="gender" value={formData.gender} onChange={handleInputChange}>
-         <option value="">Select Gender</option>
-         <option value="male">Male</option>
-         <option value="female">Female</option>
-         <option value="disclose">Prefer not to disclose</option>
-         </select>
-
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="disclose">Prefer not to disclose</option>
+            </select>
           </div>
           <select name="disorder" value={formData.disorder} onChange={handleInputChange}>
-  <option value="">Select Disorder</option>
-  <option value="ASD">ASD</option>
-  <option value="ID">ID</option>
-</select>
-
+            <option value="">Select Disorder</option>
+            <option value="ASD">ASD</option>
+            <option value="ID">ID</option>
+          </select>
 
           <input type="text" name="mobile" placeholder="Mobile number" value={formData.mobile} onChange={handleInputChange} />
           <input type="email" name="email" placeholder="E-mail" value={formData.email} onChange={handleInputChange} />
 
-          {/* Avatar Selection */}
           <div className="avatar-selection">
             <img src={avatar1} alt="Avatar 1" onClick={() => handleAvatarSelect(avatar1)} className="avatar-option" />
             <img src={avatar2} alt="Avatar 2" onClick={() => handleAvatarSelect(avatar2)} className="avatar-option" />
-            
           </div>
 
-          {/* Buttons */}
           <div className="button-group">
             <button type="submit" className="submit-btn">SUBMIT</button>
             <button type="button" className="edit-btn">EDIT</button>
             <button type="button" className="home-btn" onClick={handleHome}>HOME</button>
           </div>
-
-          
         </form>
       </div>
 
-      {/* Styles */}
       <style>{`
         .profile-container {
   position: relative;

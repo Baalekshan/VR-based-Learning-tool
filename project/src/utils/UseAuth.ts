@@ -1,43 +1,58 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { config } from '../frontend/config';
+import { useNavigate } from "react-router-dom";
 
 interface User {
   email: string;
+  firstName: string;
+  lastName: string;
+  userId: string;
+  authMethod: string;
 }
 
-const useAuth = (): string | null => {
+const useAuth = (): { user: User | null; isLoading: boolean } => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");  // Get the token from localStorage
-    if (token) {
-      // Fetch current user with the token
-      fetchCurrentUser();
-    } else {
-      setUser(null);
-      setIsLoading(false);
-    }
-  }, []);
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
 
-  const fetchCurrentUser = async () => {
-    try {
-      const response = await axios.get<User>(`${config.apiBaseUrl}/current-user`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,  // Send the token for authentication
-        },
-        withCredentials: true,
-      });
-      setUser(response.data);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Error fetching current user:', error);
-      setIsLoading(false);
-    }
-  };
+      try {
+        const response = await axios.get<User>(`${config.apiBaseUrl}/current-user`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-  return user?.email || null;  // Return email if user is found
+        if (response.data) {
+          setUser(response.data);
+          // Redirect to selection page if not already there
+          if (window.location.pathname === '/login' || window.location.pathname === '/') {
+            navigate('/selectionpage');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching current user:', error);
+        // Clear invalid token
+        localStorage.removeItem('token');
+        localStorage.removeItem('email');
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [navigate]);
+
+  return { user, isLoading };
 };
 
 export default useAuth;

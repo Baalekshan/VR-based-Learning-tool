@@ -2,34 +2,153 @@ import React, { useEffect, useRef, useState } from 'react';
 import 'aframe';
 import { submitScore } from '../utils/submitScore';
 import useAuth from '../utils/UseAuth';
+import * as THREE from 'three';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// Register custom component for solar system animation control
+if (typeof AFRAME !== 'undefined') {
+  AFRAME.registerComponent('solar-system-animation', {
+    init: function() {
+      this.mixer = null;
+      this.clock = new THREE.Clock();
+      this.actions = [];
+      
+      this.el.addEventListener('model-loaded', () => {
+        const mesh = this.el.getObject3D('mesh');
+        if (mesh) {
+          console.log('Solar system model loaded:', mesh);
+          if (mesh.animations && mesh.animations.length > 0) {
+            this.mixer = new THREE.AnimationMixer(mesh);
+            
+            mesh.animations.forEach(clip => {
+              // Create two actions for the same animation
+              const action1 = this.mixer.clipAction(clip);
+              const action2 = this.mixer.clipAction(clip);
+              
+              // Ultra-slow timeScale - complete cycle in 2 minutes (120 seconds)
+              const timeScale = clip.duration / 120;
+              
+              // Configure first action
+              action1.setLoop(THREE.LoopRepeat, Infinity);
+              action1.clampWhenFinished = false;
+              action1.timeScale = timeScale;
+              action1.zeroSlopeAtStart = true;
+              action1.zeroSlopeAtEnd = true;
+              
+              // Configure second action with offset
+              action2.setLoop(THREE.LoopRepeat, Infinity);
+              action2.clampWhenFinished = false;
+              action2.timeScale = timeScale;
+              action2.zeroSlopeAtStart = true;
+              action2.zeroSlopeAtEnd = true;
+              
+              // Start both actions with an offset
+              action1.play();
+              this.actions.push(action1);
+              
+              // Start the second action with a 90-second offset (3/4 through the cycle)
+              action2.startAt(clip.duration * 0.75);
+              action2.play();
+              this.actions.push(action2);
+              
+              // Set crossfade weights for ultra-smooth blending
+              action1.setEffectiveWeight(0.5);
+              action2.setEffectiveWeight(0.5);
+              
+              console.log('Started ultra-slow animation:', {
+                name: clip.name,
+                duration: clip.duration,
+                timeScale,
+                cycleTime: '10 seconds',
+                offset: 'overlapping at 75%'
+              });
+            });
+          }
+        }
+      });
+    },
+
+    tick: function(time, timeDelta) {
+      if (this.mixer) {
+        const delta = Math.min(timeDelta / 1000, 0.05);
+        this.mixer.update(delta);
+      }
+    },
+
+    remove: function() {
+      if (this.mixer) {
+        this.actions.forEach(action => action.stop());
+        this.mixer.stopAllAction();
+        this.mixer = null;
+      }
+    }
+  });
+}
 
 const VRScene: React.FC = () => {
   const sceneRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
   const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
   const [isMoving, setIsMoving] = useState(false);
-  const userEmail = useAuth();
+  const [scoreSubmitted, setScoreSubmitted] = useState(false);
+  const { user } = useAuth();
+  const userEmail = user?.email;
+  const modelRef = useRef(null);
 
   useEffect(() => {
-    // Update progress immediately when component mounts
-    const userProgressKey = `solarSystemCompleted_${userEmail}`;
-    localStorage.setItem(userProgressKey, 'true');
-    console.log('Solar system activity completed');
+    // Add animation check
+    const checkAnimation = () => {
+      const modelEntity = document.querySelector('#solarSystemModel');
+      if (modelEntity) {
+        console.log('Checking model animation state');
+        const mixer = modelEntity.getAttribute('animation-mixer');
+        console.log('Animation mixer:', mixer);
+      }
+    };
 
-    // Submit score to backend
-    if (userEmail) {
-      submitScore('solar-system', 1, userEmail)
-        .then((result) => {
-          console.log('Solar system progress saved:', result);
-        })
-        .catch((err) => {
-          console.error('Failed to save solar system progress:', err);
-          // If the backend save fails, remove the localStorage entry
-          localStorage.removeItem(userProgressKey);
-        });
+    // Check animation state periodically
+    const animationCheckInterval = setInterval(checkAnimation, 5000);
+
+    return () => {
+      clearInterval(animationCheckInterval);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!userEmail || scoreSubmitted) {
+      console.log("Score submission skipped:", {
+        hasUserEmail: !!userEmail,
+        isScoreSubmitted: scoreSubmitted
+      });
+      return;
     }
 
-    // Add keyboard controls
+    console.log("Attempting to submit score for user:", userEmail);
+    
+    submitScore('solar-system', 1, userEmail)
+      .then((response) => {
+        if (response) {
+          console.log('Solar system progress saved successfully:', response.message);
+          setScoreSubmitted(true);
+          toast.success('Solar System Activity completed successfully!', {
+            position: 'top-right',
+            autoClose: 3000,
+          });
+        } else {
+          console.error('Failed to save solar system progress: Authentication or server error');
+          setScoreSubmitted(false);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to save solar system progress:', {
+          error: err.message,
+          response: err.response?.data,
+          status: err.response?.status
+        });
+        setScoreSubmitted(false);
+      });
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const camera = document.querySelector('a-camera');
       if (!camera) return;
@@ -105,7 +224,6 @@ const VRScene: React.FC = () => {
       setIsMoving(false);
     };
 
-    // Update position and rotation display
     const updatePosition = () => {
       const camera = document.querySelector('a-camera');
       if (camera) {
@@ -133,42 +251,11 @@ const VRScene: React.FC = () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, []);
-
-  const updateProgress = () => {
-    try {
-      // Check if the activity was already completed for this user
-      const userProgressKey = `solarSystemCompleted_${userEmail}`;
-      const isAlreadyCompleted = localStorage.getItem(userProgressKey) === 'true';
-      
-      if (!isAlreadyCompleted) {
-        localStorage.setItem(userProgressKey, 'true');
-        if (userEmail) {
-          submitScore('solar-system', 1, userEmail)
-            .then((result) => {
-              console.log('Solar system progress saved:', result);
-            })
-            .catch((err) => {
-              console.error('Failed to save solar system progress:', err);
-              // If the backend save fails, remove the localStorage entry
-              localStorage.removeItem(userProgressKey);
-            });
-        }
-        console.log('Solar system activity completed');
-      }
-    } catch (error) {
-      console.error('Error updating solar system progress:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (localStorage.getItem(`solarSystemCompleted_${userEmail}`) === 'true') {
-      updateProgress();
-    }
-  }, [userEmail]);
+  }, [userEmail, scoreSubmitted]);
 
   return (
     <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', backgroundColor: 'black' }}>
+      <ToastContainer />
       <a-scene
         ref={sceneRef}
         embedded
@@ -177,15 +264,13 @@ const VRScene: React.FC = () => {
         background="color: #000000"
         loading-screen="enabled: true"
       >
-        {/* Skybox with space background */}
         <a-sky 
-          src="https://cdn.glitch.global/f4b2afd1-d1e5-4ad0-8681-623d1235f0cb/space.jpg?v=1689324492405"
+          src="https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&w=3000"
           radius="5000"
           segments-height="64"
           segments-width="64"
         ></a-sky>
 
-        {/* Camera with enhanced movement controls */}
         <a-entity position="0 1.6 10">
           <a-camera 
             wasd-controls="enabled: true; acceleration: 50; fly: true"
@@ -201,26 +286,23 @@ const VRScene: React.FC = () => {
           </a-camera>
         </a-entity>
 
-        {/* Lights */}
         <a-entity light="type: hemisphere; intensity: 2; color: #ffffff; groundColor: #444444"></a-entity>
         <a-entity light="type: directional; intensity: 2; color: #ffffff" position="5 10 7.5"></a-entity>
 
-        {/* Model */}
         <a-entity
           id="solarSystemModel"
+          ref={modelRef}
           gltf-model="/models/solar_system_animation/scene.gltf"
-          animation-mixer
+          solar-system-animation
           position="0 0 -15"
           scale="0.5 0.5 0.5"
         ></a-entity>
 
-        {/* Environment & Controls */}
         <a-entity environment="preset: default;"></a-entity>
         <a-entity oculus-touch-controls="hand: left"></a-entity>
         <a-entity oculus-touch-controls="hand: right"></a-entity>
       </a-scene>
 
-      {/* Enhanced Controls Overlay */}
       <div style={{
         position: 'absolute',
         bottom: '20px',
@@ -233,9 +315,9 @@ const VRScene: React.FC = () => {
         zIndex: 1000,
         maxWidth: '300px'
       }}>
-        <h3 style={{ margin: '0 0 10px 0' }}>Controls</h3>
+        <h3 style={{ margin: '0 0 10px 0' }}>Solar System Controls</h3>
         <div style={{ marginBottom: '10px' }}>
-          <h4 style={{ margin: '0 0 5px 0' }}>Keyboard Controls:</h4>
+          <h4 style={{ margin: '0 0 5px 0' }}>Navigation:</h4>
           <ul style={{ margin: '0', paddingLeft: '20px' }}>
             <li>W/S: Move forward/backward</li>
             <li>A/D: Move left/right</li>
@@ -250,12 +332,12 @@ const VRScene: React.FC = () => {
           <p style={{ margin: '0' }}>Rotation: {rotation.y}°</p>
           <p style={{ margin: '0' }}>Status: {isMoving ? 'Moving' : 'Stationary'}</p>
         </div>
-        <div style={{ marginBottom: '10px' }}>
-          <h4 style={{ margin: '0 0 5px 0' }}>VR Controls:</h4>
+        <div>
+          <h4 style={{ margin: '0 0 5px 0' }}>VR Mode:</h4>
           <ul style={{ margin: '0', paddingLeft: '20px' }}>
-            <li>Click the VR button to enter VR mode</li>
-            <li>Use VR controllers to move and interact</li>
-            <li>Press the menu button to exit VR</li>
+            <li>Click VR button to enter VR</li>
+            <li>Use controllers to move</li>
+            <li>Press menu to exit VR</li>
           </ul>
         </div>
       </div>

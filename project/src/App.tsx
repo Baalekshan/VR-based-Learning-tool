@@ -14,54 +14,48 @@ import ColoringActivity from "./frontend/ColoringActivity";
 // @ts-ignore
 import TrafficScene from "./frontend/RoadCross";
 import VRGroceryLanding from "./frontend/VRGroceryLanding";
-import logo from "./assets/Fun Beans Logo.png";
 import Store3D from "./frontend/Store3D";
 import VRGroceryShopping from "./frontend/VRGroceryShopping";
 import SolarSystem from "./frontend/SolarSystem";
 import Store3DAFrame from "./frontend/Store3DAFrame";
+import Layout from "./frontend/Layout";
+
 const isAuthenticated = () => {
   return !!localStorage.getItem("token");
 };
 
 const PrivateRoute = ({ element }: { element: React.ReactNode }) => {
-  return isAuthenticated() ? element : <Navigate to="/login" replace />;
+  return isAuthenticated() ? (
+    <Layout>
+      {element}
+    </Layout>
+  ) : <Navigate to="/login" replace />;
 };
 
 function App() {
   return (
     <Router>
-      <div className="relative">
-        {/* Logo in top right corner */}
-        <div className="fixed top-4 right-4 z-50">
-          <img 
-            src={logo} 
-            alt="Fun Beans Logo" 
-            className="w-16 h-16 object-contain"
-          />
-        </div>
-        
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
 
-          {/* Protected Routes */}
-          <Route path="/selectionpage" element={<PrivateRoute element={<SelectionPage />} />} />
-          <Route path="/asdpage" element={<PrivateRoute element={<Asd />} />} />
-          <Route path="/idpage" element={<PrivateRoute element={<ID />} />} />
-          <Route path="/progress-track-asd" element={<PrivateRoute element={<ProgressTrackingAsd />} />} />
-          <Route path="/progress-track-id" element={<PrivateRoute element={<ProgressTrackingID />} />} />
-          <Route path="/user-profile" element={<PrivateRoute element={<ProfilePage />} />} />
-          <Route path="/communication-quiz" element={<PrivateRoute element={<CommunicationQuiz />} />} />
-          <Route path="/object-quiz" element={<PrivateRoute element={<ObjectQuiz />} />} />
-          <Route path="/road-crossing"  element={<TrafficScene />} />
-          <Route path="/coloring-activity" element={<ColoringActivity />} />
-          <Route path="/vr-grocery" element={<VRGroceryLanding />} />
-          <Route path="/shopping" element={<VRGroceryShopping />} />
-          <Route path="/store-3d" element={<Store3DAFrame />} />
-          <Route path="/solar-system" element={<SolarSystem />} />
-        </Routes>
-      </div>
+        {/* Protected Routes */}
+        <Route path="/selectionpage" element={<PrivateRoute element={<SelectionPage />} />} />
+        <Route path="/asdpage" element={<PrivateRoute element={<Asd />} />} />
+        <Route path="/idpage" element={<PrivateRoute element={<ID />} />} />
+        <Route path="/progress-track-asd" element={<PrivateRoute element={<ProgressTrackingAsd />} />} />
+        <Route path="/progress-track-id" element={<PrivateRoute element={<ProgressTrackingID />} />} />
+        <Route path="/user-profile" element={<PrivateRoute element={<ProfilePage />} />} />
+        <Route path="/communication-quiz" element={<PrivateRoute element={<CommunicationQuiz />} />} />
+        <Route path="/object-quiz" element={<PrivateRoute element={<ObjectQuiz />} />} />
+        <Route path="/road-crossing" element={<PrivateRoute element={<TrafficScene />} />} />
+        <Route path="/coloring-activity" element={<PrivateRoute element={<ColoringActivity />} />} />
+        <Route path="/vr-grocery" element={<PrivateRoute element={<VRGroceryLanding />} />} />
+        <Route path="/shopping" element={<PrivateRoute element={<VRGroceryShopping />} />} />
+        <Route path="/store-3d" element={<PrivateRoute element={<Store3DAFrame />} />} />
+        <Route path="/solar-system" element={<PrivateRoute element={<SolarSystem />} />} />
+      </Routes>
     </Router>
   );
 }

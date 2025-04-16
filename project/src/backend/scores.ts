@@ -115,7 +115,8 @@ const validateActivityType = (activity: string): boolean => {
     'object-quiz', 
     'road-crossing', 
     'coloring-activity',
-    'grocery-shopping'
+    'grocery-shopping',
+    'solar-system'
   ];
   return validActivities.includes(activity);
 };

@@ -12,6 +12,7 @@ const router = Router();
 
 // Using centralized config
 const BASE_URL = config.clientBaseUrl;
+const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
 interface GoogleLoginUser {
   id: string;
@@ -63,11 +64,11 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
             console.log('User found:', user);
           }
 
-          const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET || 'secret', {
+          const token = jwt.sign({ userId: user._id, email: user.email }, JWT_SECRET, {
             expiresIn: '1d',
           });
 
-          done(null, { id: user._id, token });
+          done(null, { id: user._id, token, email: user.email });
         } catch (error) {
           console.error('Error in Google Strategy:', error);
           return done(error, false);
@@ -86,14 +87,24 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     '/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
-      const { token } = req.user as GoogleLoginUser;
+      const { token, email } = req.user as GoogleLoginUser & { email: string };
+      
+      // Set token in cookie
       res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 24 * 60 * 60 * 1000, // 1 day
       });
-      res.redirect(`${BASE_URL}/selectionpage`);
+
+      // Send token and user data in response
+      res.send(`
+        <script>
+          localStorage.setItem('token', '${token}');
+          localStorage.setItem('email', '${email}');
+          window.location.href = '${BASE_URL}/selectionpage';
+        </script>
+      `);
     }
   );
 } else {

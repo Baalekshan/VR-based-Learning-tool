@@ -45,7 +45,7 @@ const TrafficScene = () => {
 
   useEffect(() => {
     if (score > 0 && email) {
-      submitScore('road-crossing', score, email);
+      submitScore('road-crossing', score, email.user?.email);
       toast.success('Score submitted successfully!', {
         position: 'top-right',
         autoClose: 3000,

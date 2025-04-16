@@ -20,13 +20,18 @@ export const submitScore = async (
       return null;
     }
 
+    const payload = {
+      activity,
+      score,
+      email,
+    };
+
+    console.log("Submitting score with payload:", payload);
+    console.log("Authorization token present:", !!token);
+
     const response = await axios.post<SubmitScoreResponse>(
       `${API_BASE_URL}/submit-score`,
-      {
-        activity,
-        score,
-        email,
-      },
+      payload,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -36,10 +41,14 @@ export const submitScore = async (
       }
     );
 
-    console.log("Score submitted successfully:", response.data.message);
+    console.log("Score submission response:", response.data);
     return response.data;
-  } catch (error) {
-    console.error("Error submitting score:", error);
+  } catch (error: any) {
+    console.error("Error submitting score:", {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status
+    });
     return null;
   }
 };

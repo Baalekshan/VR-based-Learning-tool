@@ -15,19 +15,44 @@ import { fetchProfile } from "../utils/fetchProfile";
 const ID: React.FC = () => {
   const [userName, setUserName] = useState("");
   const [avatar, setAvatar] = useState("");
-  useEffect(() => {
-    const getProfile = async () => {
-    const profile = await fetchProfile();
-    if (profile?.name) {
-      setUserName(profile.name);
-    }
-    if (profile?.avatar) {
-      setAvatar(profile.avatar);
-    }
-  };
-    getProfile();
-  }, []);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        // First check localStorage
+        const storedProfile = localStorage.getItem('profile');
+        if (storedProfile) {
+          const profile = JSON.parse(storedProfile);
+          setUserName(profile.name || 'User');
+          if (profile.avatar) {
+            setAvatar(profile.avatar);
+          }
+          return;
+        }
+
+        // If not in localStorage, fetch from API
+        const profile = await fetchProfile();
+        if (profile) {
+          setUserName(profile.name || 'User');
+          if (profile.avatar) {
+            setAvatar(profile.avatar);
+          }
+          // Store in localStorage for future use
+          localStorage.setItem('profile', JSON.stringify({
+            name: profile.name,
+            disorder: profile.disorder,
+            email: profile.email
+          }));
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+      }
+    };
+
+    loadProfile();
+  }, []);
+
   const handleProgressTrackingID = () => {
     navigate("/progress-track-id");
   }

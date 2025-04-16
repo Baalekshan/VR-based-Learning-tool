@@ -1,19 +1,80 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import selectionBg from "../assets/selectionBg.jpg";
 import selectionAvatar from "../assets/selectionAvatar.png";
+import { fetchProfile } from "../utils/fetchProfile";
 
 function SelectionPage() {
   const [selectedCategory, setSelectedCategory] = useState(""); // Store selected category
   const navigate = useNavigate();
 
-  const handleProfile = () => {
-    navigate("/user-profile");
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem("token");
+      const email = localStorage.getItem("email");
+      
+      if (!token || !email) {
+        console.error("No token or email found in localStorage");
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const profile = await fetchProfile();
+        if (profile?.disorder) {
+          // If user already has a profile with disorder type, redirect to appropriate page
+          if (profile.disorder === "ASD") {
+            navigate("/asdpage");
+          } else if (profile.disorder === "ID") {
+            navigate("/idpage");
+          }
+        }
+      } catch (error) {
+        console.error("Error checking profile:", error);
+        // If there's an error, keep user on selection page
+      }
+    };
+
+    checkAuth();
+  }, [navigate]);
+
+  const handleProfile = async () => {
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+    
+    if (!token || !email) {
+      console.error("Token or email not found");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const profile = await fetchProfile();
+      if (profile?.disorder) {
+        // If user already has a profile with disorder type, redirect to appropriate page
+        if (profile.disorder === "ASD") {
+          navigate("/asdpage");
+        } else if (profile.disorder === "ID") {
+          navigate("/idpage");
+        }
+      } else {
+        // If no profile or no disorder type, go to profile page
+        navigate("/user-profile");
+      }
+    } catch (error) {
+      console.error("Error checking profile:", error);
+      navigate("/user-profile");
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedCategory) {
+      console.error("No category selected");
+      return;
+    }
     console.log("Selected Category:", selectedCategory);
+    handleProfile();
   };
 
   return (
@@ -57,7 +118,7 @@ function SelectionPage() {
             </label>
           </div>
 
-          <button type="submit" className="submit-btn" onClick={handleProfile}>
+          <button type="submit" className="submit-btn">
             Submit
           </button>
         </form>

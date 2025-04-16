@@ -30,7 +30,7 @@ const VRGroceryShopping: React.FC = () => {
         // If user is logged in, submit score to server
         if (userEmail) {
           // Submit a score of 1 to indicate completion
-          submitScore('grocery-shopping', 1, userEmail)
+          submitScore('grocery-shopping', 1, userEmail.user?.email || '')
             .then(result => {
               console.log('Grocery shopping progress saved:', result);
             })
@@ -133,19 +133,21 @@ const VRGroceryShopping: React.FC = () => {
       )}
       
       <div className="vr-header">
-        <h1>VR Grocery Shopping</h1>
-        <div className="header-controls">
-          {completedShopping && (
-            <div className="completion-badge">
-              Completed ✓
-            </div>
-          )}
+        <div className="header-left">
           <button className="cart-toggle" onClick={() => setShowCart(!showCart)}>
             {showCart ? 'Hide Cart' : 'Show Cart'} ({cartItems.length})
           </button>
           <button className="back-button" onClick={handleBackToLanding}>
             Back to Landing
           </button>
+        </div>
+        <h1>VR Grocery Shopping</h1>
+        <div className="header-right">
+          {completedShopping && (
+            <div className="completion-badge">
+              Completed ✓
+            </div>
+          )}
         </div>
       </div>
 
@@ -332,7 +334,7 @@ const VRGroceryShopping: React.FC = () => {
         
         .notification {
           position: fixed;
-          top: 20px;
+          top: 80px;
           right: 20px;
           background: #4CAF50;
           color: white;
@@ -341,6 +343,8 @@ const VRGroceryShopping: React.FC = () => {
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
           z-index: 1000;
           animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 1.7s forwards;
+          max-width: 300px;
+          word-wrap: break-word;
         }
         
         @keyframes slideIn {
@@ -358,13 +362,28 @@ const VRGroceryShopping: React.FC = () => {
           justify-content: space-between;
           align-items: center;
           margin-bottom: 20px;
-          padding-bottom: 15px;
+          padding: 20px 100px 15px 20px;
           border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+          position: relative;
         }
         
-        .header-controls {
+        .header-left {
           display: flex;
           gap: 10px;
+          align-items: center;
+        }
+
+        .header-right {
+          display: flex;
+          align-items: center;
+        }
+        
+        .vr-header h1 {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          margin: 0;
+          white-space: nowrap;
         }
         
         .vr-content {
@@ -721,7 +740,7 @@ const VRGroceryShopping: React.FC = () => {
         }
         
         .cart-toggle {
-          padding: 8px 15px;
+          padding: 8px 20px;
           border: none;
           border-radius: 8px;
           background: #2196F3;
@@ -732,6 +751,7 @@ const VRGroceryShopping: React.FC = () => {
         
         .cart-toggle:hover {
           background: #0b7dda;
+          
         }
         
         .back-button {
@@ -768,8 +788,28 @@ const VRGroceryShopping: React.FC = () => {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
           }
           
-          .header-controls {
+          .vr-header {
             flex-direction: column;
+            gap: 15px;
+            padding: 20px;
+            align-items: flex-start;
+          }
+          
+          .vr-header h1 {
+            position: static;
+            transform: none;
+            order: -1;
+            margin-bottom: 15px;
+          }
+          
+          .header-left {
+            width: 100%;
+            justify-content: flex-start;
+          }
+          
+          .header-right {
+            width: 100%;
+            justify-content: flex-start;
           }
           
           .product-details-content {

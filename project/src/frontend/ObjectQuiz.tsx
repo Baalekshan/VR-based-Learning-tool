@@ -47,9 +47,8 @@ const ObjectQuiz: React.FC = () => {
     setQuizCompleted(false);
     setScore(0);
   };
-
   if (quizCompleted && email) {
-    submitScore('object-quiz', score, email);
+    submitScore('object-quiz', score, email.user?.email || '');
   }
 
   const progressPercentage = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;

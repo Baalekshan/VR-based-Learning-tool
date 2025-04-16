@@ -67,6 +67,7 @@ const ColoringActivity: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [visitedImages, setVisitedImages] = useState<Set<number>>(new Set());
+  const [coloredImages, setColoredImages] = useState<Set<number>>(new Set());
   const navigate = useNavigate();
   const userEmail = useAuth();
 
@@ -116,12 +117,6 @@ const ColoringActivity: React.FC = () => {
           const newVisitedImages = new Set(visitedImages);
           newVisitedImages.add(currentImageId);
           setVisitedImages(newVisitedImages);
-          
-          // If user is logged in, submit score to server
-          if (userEmail) {
-            submitScore('coloring-activity', newVisitedImages.size, userEmail)
-              .catch(err => console.error('Failed to submit score:', err));
-          }
         }
       } catch (error) {
         console.error('Error updating progress:', error);
@@ -129,7 +124,90 @@ const ColoringActivity: React.FC = () => {
     };
     
     updateProgress();
-  }, [currentImageIndex, visitedImages, userEmail]);
+  }, [currentImageIndex, visitedImages]);
+
+  // Update progress when an image is colored
+  useEffect(() => {
+    const updateColoredProgress = async () => {
+      try {
+        // Get the current image's ID
+        const currentImageId = coloringImages[currentImageIndex].id;
+        console.log('Checking colored progress for image:', currentImageId);
+        console.log('Current user:', userEmail?.user?.email);
+        console.log('Current colored images:', Array.from(coloredImages));
+        
+        // Check if this image has been colored
+        if (!coloredImages.has(currentImageId)) {
+          console.log('Image not previously colored, adding to colored images set');
+          // Add to colored images
+          const newColoredImages = new Set(coloredImages);
+          newColoredImages.add(currentImageId);
+          setColoredImages(newColoredImages);
+          
+          // If user is logged in, submit score to server
+          if (userEmail?.user?.email) {
+            console.log('Submitting score:', {
+              activity: 'coloring-activity',
+              score: newColoredImages.size,
+              email: userEmail.user.email
+            });
+            
+            try {
+              await submitScore('coloring-activity', newColoredImages.size, userEmail.user.email);
+              console.log('Score submitted successfully');
+            } catch (err) {
+              console.error('Failed to submit score:', err);
+              // You might want to show a user-friendly error message here
+            }
+          } else {
+            console.log('User not logged in, skipping score submission');
+          }
+        } else {
+          console.log('Image already colored, skipping score update');
+        }
+      } catch (error) {
+        console.error('Error in updateColoredProgress:', error);
+      }
+    };
+    
+    // Call the async function
+    updateColoredProgress();
+  }, [coloredImages, currentImageIndex, userEmail]);
+
+  // Add a new effect to detect canvas changes and trigger coloring progress
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const checkForColoring = () => {
+      // Get image data to check if any non-white pixels exist
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      
+      // Check if there are any non-white pixels (indicating coloring)
+      const hasColoredPixels = Array.from(data).some((value, index) => {
+        // Check only RGB values (skip alpha)
+        if (index % 4 === 3) return false; // Skip alpha channel
+        return value < 255; // If any RGB value is less than 255 (white), it's colored
+      });
+
+      if (hasColoredPixels) {
+        console.log('Detected coloring on canvas, updating progress');
+        const currentImageId = coloringImages[currentImageIndex].id;
+        setColoredImages(prev => new Set([...prev, currentImageId]));
+      }
+    };
+
+    // Add event listeners to detect drawing/filling
+    canvas.addEventListener('mouseup', checkForColoring);
+    
+    return () => {
+      canvas.removeEventListener('mouseup', checkForColoring);
+    };
+  }, [currentImageIndex]);
 
   // Load the current outline image
   useEffect(() => {

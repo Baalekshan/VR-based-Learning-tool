@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {Navigate,  useNavigate } from "react-router-dom";
 import bgImage from "../assets/background.png";
 import vrCharacter from "../assets/vr-character.png";
@@ -9,40 +9,61 @@ import communicationImg from "../assets/communication.png";
 import cognitiveImg from "../assets/cognitive.png";
 import socialImg from "../assets/social.png";
 import sensoryImg from "../assets/sensory.png";
-import { useEffect, useState } from "react";
 import { fetchProfile } from "../utils/fetchProfile";
 
 
 const Asd: React.FC = () => {
   const [userName, setUserName] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [avatar, setAvatar] = useState(avatarIcon);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const getProfile = async () => {
-      const profile = await fetchProfile();
-      if (profile?.name) {
-        setUserName(profile.name);
-      }
-      if (profile?.avatar) {
-        setAvatar(profile.avatar);
+    const loadProfile = async () => {
+      try {
+        // First check localStorage
+        const storedProfile = localStorage.getItem('profile');
+        if (storedProfile) {
+          const profile = JSON.parse(storedProfile);
+          setUserName(profile.name || 'User');
+          setAvatar(profile.avatar || avatarIcon);
+          return;
+        }
+
+        // If not in localStorage, fetch from API
+        const profile = await fetchProfile();
+        if (profile) {
+          setUserName(profile.name || 'User');
+          setAvatar(profile.avatar || avatarIcon);
+          // Store in localStorage for future use
+          localStorage.setItem('profile', JSON.stringify({
+            name: profile.name,
+            disorder: profile.disorder,
+            email: profile.email
+          }));
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
       }
     };
-    getProfile();
+
+    loadProfile();
   }, []);
   
-  const navigate = useNavigate();
   const handleProgressTrackingAsd = () => {
     navigate("/progress-track-asd");
-  }
+  };
+
   const handleProfile = () => {
     navigate("/user-profile");
-  }
+  };
+
   const handleDrawColor = () => {
     navigate("/coloring-activity");
-  }
+  };
+
   const handleGroceryShopping = () => {
     navigate("/vr-grocery");
-  }
-
+  };
 
   return (
     <div className="home-container">
@@ -52,7 +73,7 @@ const Asd: React.FC = () => {
       {/* User Avatar Section */}
       <div className="user-avatar">
         <img src={avatar} alt="User Avatar" style={{ borderRadius: "50%" }} className="avatar" onClick={handleProfile} />
-        <span>Hey! {userName}</span>
+        <span>Hey! {userName || 'User'}</span>
       </div>
 
       {/* Main Title */}

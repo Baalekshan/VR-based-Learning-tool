@@ -36,16 +36,18 @@ const CommunicationQuiz: React.FC = () => {
   }, [selectedQuiz]);
 
   const handleAnswer = (selectedAnswer: string) => {
+    let newScore = score;
     if (questions[currentQuestion]?.correctAnswer === selectedAnswer) {
-      setScore((prevScore) => prevScore + 1);
+      newScore = score + 1;
+      setScore(newScore);
     }
 
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion((prevQuestion) => prevQuestion + 1);
     } else {
       setQuizCompleted(true);
-      if (email) {
-        submitScore("communication-quiz", score, email);
+      if (email?.user?.email) {
+        submitScore("communication-quiz", newScore, email.user.email);
       }
     }
   };
