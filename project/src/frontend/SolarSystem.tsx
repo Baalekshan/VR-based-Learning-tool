@@ -19,49 +19,30 @@ if (typeof AFRAME !== 'undefined') {
         if (mesh) {
           console.log('Solar system model loaded:', mesh);
           if (mesh.animations && mesh.animations.length > 0) {
+            console.log('Found animations:', mesh.animations.length);
+            mesh.animations.forEach((anim, idx) => {
+              console.log(`Animation ${idx}:`, {
+                name: anim.name,
+                duration: anim.duration,
+                tracks: anim.tracks.length
+              });
+            });
+
             this.mixer = new THREE.AnimationMixer(mesh);
             
             mesh.animations.forEach(clip => {
-              // Create two actions for the same animation
-              const action1 = this.mixer.clipAction(clip);
-              const action2 = this.mixer.clipAction(clip);
-              
-              // Ultra-slow timeScale - complete cycle in 2 minutes (120 seconds)
-              const timeScale = clip.duration / 120;
-              
-              // Configure first action
-              action1.setLoop(THREE.LoopRepeat, Infinity);
-              action1.clampWhenFinished = false;
-              action1.timeScale = timeScale;
-              action1.zeroSlopeAtStart = true;
-              action1.zeroSlopeAtEnd = true;
-              
-              // Configure second action with offset
-              action2.setLoop(THREE.LoopRepeat, Infinity);
-              action2.clampWhenFinished = false;
-              action2.timeScale = timeScale;
-              action2.zeroSlopeAtStart = true;
-              action2.zeroSlopeAtEnd = true;
-              
-              // Start both actions with an offset
-              action1.play();
-              this.actions.push(action1);
-              
-              // Start the second action with a 90-second offset (3/4 through the cycle)
-              action2.startAt(clip.duration * 0.75);
-              action2.play();
-              this.actions.push(action2);
-              
-              // Set crossfade weights for ultra-smooth blending
-              action1.setEffectiveWeight(0.5);
-              action2.setEffectiveWeight(0.5);
-              
-              console.log('Started ultra-slow animation:', {
-                name: clip.name,
-                duration: clip.duration,
-                timeScale,
-                cycleTime: '10 seconds',
-                offset: 'overlapping at 75%'
+              const action = this.mixer.clipAction(clip);
+              action.setLoop(THREE.LoopRepeat, Infinity);
+              // Calculate timeScale for 1-minute duration
+              const targetDuration = 60; // 1 minute in seconds
+              const timeScale = clip.duration / targetDuration;
+              action.timeScale = timeScale;
+              action.play();
+              this.actions.push(action);
+              console.log('Started animation:', clip.name, {
+                originalDuration: clip.duration,
+                targetDuration,
+                timeScale
               });
             });
           }
