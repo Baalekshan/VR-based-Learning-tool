@@ -5,10 +5,21 @@ import '../styles/ObjectQuizStyles.css';
 import { submitScore } from '../utils/submitScore';
 import useAuth from '../utils/UseAuth';
 import selectionBg from '../assets/selectionBg.jpg';
+
 type Question = {
   question: string;
   options: string[];
   correctAnswer: string;
+};
+
+// Function to shuffle an array using Fisher-Yates algorithm
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
 };
 
 const ObjectQuiz: React.FC = () => {
@@ -17,12 +28,22 @@ const ObjectQuiz: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
-  const email = useAuth();
+  const [allQuestions, setAllQuestions] = useState<Question[]>([]);
+  const { user } = useAuth();
+  const QUESTIONS_LIMIT = 10;
 
   useEffect(() => {
     fetch('quizData.json')
       .then(response => response.json())
-      .then((data: { objectQuiz: Question[] }) => setQuestions(data.objectQuiz))
+      .then((data: { objectQuiz: Question[] }) => {
+        // Store all available questions
+        setAllQuestions(data.objectQuiz);
+        
+        // Shuffle and select 10 random questions
+        const shuffledQuestions = shuffleArray(data.objectQuiz);
+        const selectedQuestions = shuffledQuestions.slice(0, QUESTIONS_LIMIT);
+        setQuestions(selectedQuestions);
+      })
       .catch(error => console.error('Error loading quiz data:', error));
   }, []);
 
@@ -37,19 +58,24 @@ const ObjectQuiz: React.FC = () => {
         setSelectedOption(null);
       } else {
         setQuizCompleted(true);
+        if (user?.email) {
+          submitScore('object-quiz', score, user.email);
+        }
       }
     }, 500);
   };
 
   const handleRestartQuiz = () => {
+    // Reshuffle questions when restarting
+    const shuffledQuestions = shuffleArray(allQuestions);
+    const selectedQuestions = shuffledQuestions.slice(0, QUESTIONS_LIMIT);
+    setQuestions(selectedQuestions);
+    
     setCurrentQuestionIndex(0);
     setSelectedOption(null);
     setQuizCompleted(false);
     setScore(0);
   };
-  if (quizCompleted && email) {
-    submitScore('object-quiz', score, email.user?.email || '');
-  }
 
   const progressPercentage = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 

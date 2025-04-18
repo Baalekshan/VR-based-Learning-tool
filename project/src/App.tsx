@@ -19,6 +19,7 @@ import VRGroceryShopping from "./frontend/VRGroceryShopping";
 import SolarSystem from "./frontend/SolarSystem";
 import Store3DAFrame from "./frontend/Store3DAFrame";
 import Layout from "./frontend/Layout";
+import CognitiveActivities from "./frontend/CognitiveActivities";
 
 const isAuthenticated = () => {
   return !!localStorage.getItem("token");
@@ -49,6 +50,7 @@ function App() {
         <Route path="/user-profile" element={<PrivateRoute element={<ProfilePage />} />} />
         <Route path="/communication-quiz" element={<PrivateRoute element={<CommunicationQuiz />} />} />
         <Route path="/object-quiz" element={<PrivateRoute element={<ObjectQuiz />} />} />
+        <Route path="/cognitive-activities" element={<PrivateRoute element={<CognitiveActivities />} />} />
         <Route path="/road-crossing" element={<PrivateRoute element={<TrafficScene />} />} />
         <Route path="/coloring-activity" element={<PrivateRoute element={<ColoringActivity />} />} />
         <Route path="/vr-grocery" element={<PrivateRoute element={<VRGroceryLanding />} />} />

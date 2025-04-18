@@ -84,14 +84,6 @@ const ID: React.FC = () => {
           <img src={progressIcon} alt="Progress Tracking" />
           <span onClick={handleProgressTrackingID}>Progress Tracking</span>
         </div>
-        <div className="feature-card">
-          <img src={progressIcon} alt="Grocery Shopping" />
-          <span onClick={handleGroceryShopping}>Grocery Shopping</span>
-        </div>
-        <div className="feature-card">
-          <img src={progressIcon} alt="Draw/Color" />
-          <span onClick={handleDrawColor}>Draw/Color</span>
-        </div>
       </div>
 
       {/* VR Character & Skill Cards */}
@@ -104,7 +96,7 @@ const ID: React.FC = () => {
           </div>
           <div className="skill-card">
             <img src={cognitiveImg} alt="Cognitive Skills" />
-            <span onClick={() => navigate("/road-crossing")}>COGNITIVE SKILLS</span>
+            <span onClick={() => navigate("/cognitive-activities")}>COGNITIVE SKILLS</span>
           </div>
         </div>
 
@@ -119,7 +111,7 @@ const ID: React.FC = () => {
           </div>
           <div className="skill-card">
             <img src={sensoryImg} alt="Sensory Regulation" />
-            <span onClick={() => navigate("/solar-system")}>EXPLORE SOLAR SYSTEM</span>
+            <span>SENSORY REGULATION</span>
           </div>
         </div>
       </div>

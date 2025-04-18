@@ -16,6 +16,16 @@ interface QuizData {
   [key: string]: Question[];
 }
 
+// Function to shuffle an array using Fisher-Yates algorithm
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+};
+
 const CommunicationQuiz: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
@@ -23,14 +33,23 @@ const CommunicationQuiz: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [selectedQuiz, setSelectedQuiz] = useState<string>("communicationQuiz");
-  const email = useAuth();
+  const { user } = useAuth();
+  const QUESTIONS_LIMIT = 5;
 
   useEffect(() => {
     fetch("quizData.json")
       .then((response) => response.json())
       .then((data: QuizData) => {
         setQuizData(data);
-        setQuestions(data[selectedQuiz] || []);
+        
+        // Get all questions for the selected quiz type
+        const allQuestions = data[selectedQuiz] || [];
+        
+        // Shuffle and limit to 5 random questions
+        const shuffledQuestions = shuffleArray(allQuestions);
+        const selectedQuestions = shuffledQuestions.slice(0, QUESTIONS_LIMIT);
+        
+        setQuestions(selectedQuestions);
       })
       .catch((error) => console.error("Error loading quiz data:", error));
   }, [selectedQuiz]);
@@ -46,13 +65,21 @@ const CommunicationQuiz: React.FC = () => {
       setCurrentQuestion((prevQuestion) => prevQuestion + 1);
     } else {
       setQuizCompleted(true);
-      if (email?.user?.email) {
-        submitScore("communication-quiz", newScore, email.user.email);
+      if (user?.email) {
+        submitScore("communication-quiz", newScore, user.email);
       }
     }
   };
 
   const handleRestart = () => {
+    // Reshuffle questions when restarting
+    if (quizData) {
+      const allQuestions = quizData[selectedQuiz] || [];
+      const shuffledQuestions = shuffleArray(allQuestions);
+      const selectedQuestions = shuffledQuestions.slice(0, QUESTIONS_LIMIT);
+      setQuestions(selectedQuestions);
+    }
+    
     setCurrentQuestion(0);
     setScore(0);
     setQuizCompleted(false);
@@ -61,7 +88,7 @@ const CommunicationQuiz: React.FC = () => {
   return (
     <div className="quiz-background">
       <div className="quiz-container">
-        <h2 className="quiz-title">Image Quiz</h2>
+        <h2 className="quiz-title">Communication Quiz</h2>
         <ProgressBar
           animated
           now={((currentQuestion + 1) / questions.length) * 100}

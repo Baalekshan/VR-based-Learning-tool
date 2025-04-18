@@ -1,87 +1,251 @@
 {
-    "objectQuiz": [
-      {
-        "question": "Identify the Dog?",
-        "options": ["🐶", "🐱", "🐰", "🐯"],
-        "correctAnswer": "🐶"
-      },
-      {
-        "question": "Where is the green ball?",
-        "options": ["🔴", "🟢", "🔵", "🟡"],
-        "correctAnswer": "🟢"
-      },
-      {
-        "question": "Pick the apple?",
-        "options": ["🍎", "🍌", "🍉", "🍓"],
-        "correctAnswer": "🍎"
-      },
-      {
-        "question": "Choose the four wheeler ?",
-        "options": ["🚗", "🚂", "🚲", "🛵"],
-        "correctAnswer": "🚗"
-      },
-      {
-        "question": "Which animal is jumping?",
-        "options": ["🐈", "🦘", "🦉", "🦆"],
-        "correctAnswer": "🦘"
-      },
-      {
-        "question": "Select the baloon ?",
-        "options": ["🎈", "🎂", "🪁", "🎶"],
-        "correctAnswer": "🎈"
-      },
-      {
-        "question": "What color is the sun?",
-        "options": ["🔵", "🟡", "🟢", "🟠"],
-        "correctAnswer": "🟡"
-      },
-      {
-        "question": "Which animal 'purrs'?",
-        "options": ["🐶", "🐱", "🐷", "🦁"],
-        "correctAnswer": "🐶"
-      },
-      {
-        "question": "Pick the pen ?",
-        "options": ["🖍️", "✂️", "🖊️", "📚"],
-        "correctAnswer": "🖊️"
-      },
-      {
-        "question": "Which is the suit?",
-        "options": ["🎩", "👗", "👚", "👕"],
-        "correctAnswer": "👗"
-      }
-    ],
-    "communicationQuiz": [
-      {
-        "question": "Paris is ___ capital of France?",
-        "options": ["The", "A", "An", "Thy"],
-        "correctAnswer": "The",
-        "imageUrl": "https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg"
-      },
-      {
-        "question": "Mars is known ___ the Red Planet?",
-        "options": ["For", "As", "By", "To"],
-        "correctAnswer": "As",
-        "imageUrl": "https://cdn.mos.cms.futurecdn.net/GY9JBbrzsGsz2psUv6pgdV.jpg"
-      },
-      {
-        "question": "Harper Lee ___ 'To Kill a Mockingbird'?",
-        "options": ["Write", "Wrote", "Written", "Wrotten"],
-        "correctAnswer": "Wrote",
-        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRExSuhYbwLM-1wi8_FkTTiRpT3V8pOcBFC-Q&s"
-      },
-      {
-        "question": "Pacific is the ___ ocean on Earth?",
-        "options": ["Larger", "Large", "Largest", "Longer"],
-        "correctAnswer": "Largest",
-        "imageUrl": "https://images.unsplash.com/photo-1564450004949-76e37511ca68?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGFjaWZpYyUyMG9jZWFufGVufDB8fDB8fHww"
-      },
-      {
-        "question": "Oxygen __ the symbol 'O'?",
-        "options": ["Have", "Had", "Haven't", "Has"],
-        "correctAnswer": "Has",
-        "imageUrl": "https://chemindigest.com/wp-content/uploads/2017/12/Oxygen.png"
-      }
-    ]
-  }
-  
+  "objectQuiz": [
+    {
+      "question": "Identify the Dog?",
+      "options": ["🐶", "🐱", "🐰", "🐯"],
+      "correctAnswer": "🐶"
+    },
+    {
+      "question": "Where is the green ball?",
+      "options": ["🔴", "🟢", "🔵", "🟡"],
+      "correctAnswer": "🟢"
+    },
+    {
+      "question": "Pick the apple?",
+      "options": ["🍎", "🍌", "🍉", "🍓"],
+      "correctAnswer": "🍎"
+    },
+    {
+      "question": "Choose the four wheeler?",
+      "options": ["🚗", "🚂", "🚲", "🛵"],
+      "correctAnswer": "🚗"
+    },
+    {
+      "question": "Which animal is jumping?",
+      "options": ["🐈", "🦘", "🦉", "🦆"],
+      "correctAnswer": "🦘"
+    },
+    {
+      "question": "Select the balloon?",
+      "options": ["🎈", "🎂", "🪁", "🎶"],
+      "correctAnswer": "🎈"
+    },
+    {
+      "question": "What color is the sun?",
+      "options": ["🔵", "🟡", "🟢", "🟠"],
+      "correctAnswer": "🟡"
+    },
+    {
+      "question": "Which animal 'purrs'?",
+      "options": ["🐶", "🐱", "🐷", "🦁"],
+      "correctAnswer": "🐱"
+    },
+    {
+      "question": "Pick the pen?",
+      "options": ["🖍️", "✂️", "🖊️", "📚"],
+      "correctAnswer": "🖊️"
+    },
+    {
+      "question": "Which is the suit?",
+      "options": ["🎩", "👗", "👚", "👕"],
+      "correctAnswer": "🎩"
+    },
+    {
+      "question": "Find the bicycle?",
+      "options": ["🚗", "🚲", "🚂", "🚀"],
+      "correctAnswer": "🚲"
+    },
+    {
+      "question": "Identify the carrot?",
+      "options": ["🍎", "🥕", "🍉", "🍒"],
+      "correctAnswer": "🥕"
+    },
+    {
+      "question": "Select the cat?",
+      "options": ["🐶", "🐱", "🐮", "🦁"],
+      "correctAnswer": "🐱"
+    },
+    {
+      "question": "Pick the gift box?",
+      "options": ["🎁", "🎀", "🎉", "🎊"],
+      "correctAnswer": "🎁"
+    },
+    {
+      "question": "Which is the airplane?",
+      "options": ["🚗", "🚂", "🛫", "🚀"],
+      "correctAnswer": "🛫"
+    },
+    {
+      "question": "Choose the watermelon?",
+      "options": ["🍎", "🍓", "🍉", "🍇"],
+      "correctAnswer": "🍉"
+    },
+    {
+      "question": "Find the duck?",
+      "options": ["🦆", "🐔", "🦅", "🐦"],
+      "correctAnswer": "🦆"
+    },
+    {
+      "question": "Select the scissors?",
+      "options": ["✂️", "🖊️", "📚", "🖍️"],
+      "correctAnswer": "✂️"
+    },
+    {
+      "question": "Pick the soccer ball?",
+      "options": ["🏀", "⚾", "⚽", "🏈"],
+      "correctAnswer": "⚽"
+    },
+    {
+      "question": "Which is the bunny?",
+      "options": ["🐱", "🐶", "🐰", "🐯"],
+      "correctAnswer": "🐰"
+    },
+    {
+      "question": "Find the strawberry?",
+      "options": ["🍇", "🍓", "🍎", "🍌"],
+      "correctAnswer": "🍓"
+    },
+    {
+      "question": "Identify the lion?",
+      "options": ["🐯", "🦁", "🐻", "🐼"],
+      "correctAnswer": "🦁"
+    },
+    {
+      "question": "Select the book?",
+      "options": ["📚", "✂️", "🖊️", "🎒"],
+      "correctAnswer": "📚"
+    },
+    {
+      "question": "Pick the rainbow?",
+      "options": ["🌧️", "⛈️", "🌈", "🌤️"],
+      "correctAnswer": "🌈"
+    },
+    {
+      "question": "Which one is a dog face?",
+      "options": ["🐱", "🐭", "🐶", "🐸"],
+      "correctAnswer": "🐶"
+    }
+  ],
+  "communicationQuiz": [
+    {
+      "question": "Paris is ___ capital of France?",
+      "options": ["The", "A", "An", "Thy"],
+      "correctAnswer": "The",
+      "imageUrl": "https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg"
+    },
+    {
+      "question": "Mars is known ___ the Red Planet?",
+      "options": ["For", "As", "By", "To"],
+      "correctAnswer": "As",
+      "imageUrl": "https://cdn.mos.cms.futurecdn.net/GY9JBbrzsGsz2psUv6pgdV.jpg"
+    },
+    {
+      "question": "Harper Lee ___ 'To Kill a Mockingbird'?",
+      "options": ["Write", "Wrote", "Written", "Wrotten"],
+      "correctAnswer": "Wrote",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRExSuhYbwLM-1wi8_FkTTiRpT3V8pOcBFC-Q&s"
+    },
+    {
+      "question": "Pacific is the ___ ocean on Earth?",
+      "options": ["Larger", "Large", "Largest", "Longer"],
+      "correctAnswer": "Largest",
+      "imageUrl": "https://images.unsplash.com/photo-1564450004949-76e37511ca68?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGFjaWZpYyUyMG9jZWFufGVufDB8fDB8fHww"
+    },
+    {
+      "question": "Oxygen __ the symbol 'O'?",
+      "options": ["Have", "Had", "Haven't", "Has"],
+      "correctAnswer": "Has",
+      "imageUrl": "https://chemindigest.com/wp-content/uploads/2017/12/Oxygen.png"
+    },
+    {
+      "question": "Water freezes at ___ degrees Celsius?",
+      "options": ["100", "0", "50", "25"],
+      "correctAnswer": "0",
+      "imageUrl": "https://quench.culligan.com/wp-content/uploads/2024/09/Different-Types-of-Ice_-Why-Its-Not-as-Straightforward-as-You-Think.jpg"
+    },
+    {
+      "question": "Sun sets in the ___?",
+      "options": ["East", "West", "North", "South"],
+      "correctAnswer": "West",
+      "imageUrl": "https://www.ambong-ambong.com/wp-content/uploads/2023/03/istockphoto-1172427455-612x612-1.jpeg"
+    },
+    {
+      "question": "Fish can ___ under water?",
+      "options": ["Fly", "Walk", "Swim", "Run"],
+      "correctAnswer": "Swim",
+      "imageUrl": "https://intheknow.insead.edu/sites/intheknow/files/2019-02/craig-lovelidge-362228-unsplash-24bd8n7_feature.jpg"
+    },
+    {
+      "question": "Birds can ___ in the sky?",
+      "options": ["Walk", "Run", "Swim", "Fly"],
+      "correctAnswer": "Fly",
+      "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/026/513/090/small_2x/bird-flying-on-sunset-sky-ai-generated-photo.jpg"
+    },
+    {
+      "question": "Books are meant for ___?",
+      "options": ["Eating", "Flying", "Reading", "Sleeping"],
+      "correctAnswer": "Reading",
+      "imageUrl": "https://educationaladvancement.org/wp-content/uploads/2022/03/book-aesthetic-books-old-books-open-books-1387022.jpg"
+    },
+    {
+      "question": "Which one is a fruit?",
+      "options": ["Potato", "Carrot", "Mango", "Cucumber"],
+      "correctAnswer": "Mango",
+      "imageUrl": "https://deyga.in/cdn/shop/articles/mangoes-cover-1.jpg?v=1617118328"
+    },
+    {
+      "question": "Which month has 28 or 29 days?",
+      "options": ["January", "February", "March", "April"],
+      "correctAnswer": "February",
+      "imageUrl": "https://t4.ftcdn.net/jpg/10/25/44/13/360_F_1025441341_0PecV7UFK4Yuba79WJCXE2wKlXuGljYa.jpg"
+    },
+    {
+      "question": "Which animal is known as man's best friend?",
+      "options": ["Cat", "Dog", "Cow", "Goat"],
+      "correctAnswer": "Dog",
+      "imageUrl": "https://www.nylabone.com/-/media/project/oneweb/nylabone/images/dog101/10-intelligent-dog-breeds/golden-retriever-tongue-out.jpg?h=430&w=710&hash=7FEB820D235A44B76B271060E03572C7"
+    },
+    {
+      "question": "Who discovered America?",
+      "options": ["Newton", "Columbus", "Einstein", "Tesla"],
+      "correctAnswer": "Columbus",
+      "imageUrl": "https://blog.icesusa.org/hubfs/usa.jpg"
+    },
+    {
+      "question": "Leaves are usually not in ___?",
+      "options": ["Red", "Yellow", "Green", "Blue"],
+      "correctAnswer": "Blue",
+      "imageUrl": "https://www.thetreecenter.com/c/uploads/2015/10/Leaves_1-copy-jpg.webp"
+    },
+    {
+      "question": "Giraffes have a ___ neck?",
+      "options": ["Short", "Long", "Curly", "Broken"],
+      "correctAnswer": "Long",
+      "imageUrl": "https://cms.bbcearth.com/sites/default/files/factfiles/2024-04/Giraffe_BBC%20Earth%20Factfiles%205.jpg?imwidth=1920"
+    },
+    {
+      "question": "Pen is used for ___?",
+      "options": ["Drawing", "Cutting", "Writing", "Measuring"],
+      "correctAnswer": "Writing",
+      "imageUrl": "https://blog.williampenn.net/wp-content/uploads/2023/09/Fountain-Pens-Because-Theyre-There.jpeg"
+    },
+    {
+      "question": "The sun rises in the ___?",
+      "options": ["East", "West", "North", "South"],
+      "correctAnswer": "East",
+      "imageUrl": "https://velvetescape.com/wp-content/uploads/2011/11/dawid-zawila-G3rw6Y02D0-unsplash.jpg"
+    },
+    {
+      "question": "Rain comes from ___?",
+      "options": ["Sun", "Clouds", "Stars", "Wind"],
+      "correctAnswer": "Clouds",
+      "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/036/072/512/small_2x/thunderstorm-coming-and-clouds-raining-photo.jpg"
+    },
+    {
+      "question": "Which day comes after Monday?",
+      "options": ["Tuesday", "Wednesday", "Sunday", "Friday"],
+      "correctAnswer": "Tuesday",
+      "imageUrl": "https://www.lingoda.com/wp-content/uploads/2024/05/blog-days-of-weeks-in-english-d.jpg"
+    }
+  ]
+}
