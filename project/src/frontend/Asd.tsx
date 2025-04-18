@@ -20,15 +20,6 @@ const Asd: React.FC = () => {
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        // First check localStorage
-        const storedProfile = localStorage.getItem('profile');
-        if (storedProfile) {
-          const profile = JSON.parse(storedProfile);
-          setUserName(profile.name || 'User');
-          setAvatar(profile.avatar || avatarIcon);
-          return;
-        }
-
         // If not in localStorage, fetch from API
         const profile = await fetchProfile();
         if (profile) {
